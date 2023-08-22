@@ -20,9 +20,9 @@ failed_directories=""
 for directory in $directories; do
     echo "Running cargo fmt on $directory"
     if [[ $check -eq 1 ]]; then
-        (cd "$directory" && cargo +nightly fmt --check)
+        (cd "$directory" && cargo fmt --check)
     else
-        (cd "$directory" && cargo +nightly fmt)
+        (cd "$directory" && cargo fmt)
     fi
 
     if [ $? -ne 0 ]; then
