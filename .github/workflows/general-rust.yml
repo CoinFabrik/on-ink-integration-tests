@@ -1,0 +1,30 @@
+name: General Rust
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update Rust
+        run: rustup update
+
+      - name: Install Rust
+        run: rustup install 1.69 --profile minimal
+
+      - name: Install Rustfmt
+        run: rustup component add rustfmt
+
+      - name: Run cargo fmt
+        run: make fmt-rust-check
