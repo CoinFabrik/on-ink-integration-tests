@@ -72,6 +72,7 @@ mod set_code_hash {
                 .await
                 .expect("instantiate failed")
                 .account_id;
+
             let new_code_hash = client
                 .upload("set-code-hash", &ink_e2e::alice(), None)
                 .await
@@ -84,9 +85,7 @@ mod set_code_hash {
             // Act
             let update_code = build_message::<SetCodeHashRef>(contract_acc_id.clone())
                 .call(|contract| contract.update_code(new_code_hash));
-            let get_res = client
-                .call(&ink_e2e::alice(), update_code, 0, None)
-                .await;
+            let get_res = client.call(&ink_e2e::alice(), update_code, 0, None).await;
 
             // Assert
             assert!(get_res.is_ok());
