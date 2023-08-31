@@ -16,7 +16,7 @@ pub fn set_code_hash(code_hash: &[u8; 32]) -> Result<()>
 
 ## Test case
 
-The test presents a scenario in which the `set_code_hash` function is implemented within a vulnerable setup (lacking caller verification). Thus, our goal is to substitute this with a secure implementation. Both test cases attempt to use the `set_code_hash` function.
+The test case presents a scenario in which the `set_code_hash` function is implemented within a vulnerable setup (lacking caller verification). Thus, our goal is to substitute this with a secure implementation. Both test cases attempt to use the `set_code_hash` function.
 
 ## Comparison Integration vs E2E
 
