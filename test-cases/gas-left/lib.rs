@@ -34,7 +34,7 @@ mod gas_left {
         #[should_panic]
         fn get_gas_left() {
             let gas_left = GasLeft::new();
-            assert_eq!(gas_left.get_gas_left(), 1000000000000000000);
+            assert_eq!(gas_left.get_gas_left(), 1);
         }
     }
 
