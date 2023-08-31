@@ -5,20 +5,26 @@ mod set_code_hash {
     use ink::env::set_code_hash;
 
     #[ink(storage)]
-    pub struct SetCodeHash {}
+    pub struct SetCodeHash {
+        admin: AccountId,
+    }
 
     #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum Error {
         InvalidCodeHash,
+        NotAnAdmin,
     }
 
     impl SetCodeHash {
         #[ink(constructor)]
         pub fn new() -> Self {
-            Self {}
+            Self {
+                admin: Self::env().caller(),
+            }
         }
 
+        /// Sets new code hash to contract (doesn't check caller is admin)
         #[ink(message)]
         pub fn update_code(&self, value: [u8; 32]) -> Result<(), Error> {
             let res = set_code_hash(&value);
@@ -28,6 +34,14 @@ mod set_code_hash {
             }
 
             Ok(())
+        }
+
+        /// Returns the code hash of the contract
+        #[ink(message)]
+        pub fn get_code(&self) -> Hash {
+            self.env()
+                .code_hash(&self.env().account_id())
+                .expect("Failed to get code hash")
         }
     }
 
@@ -40,15 +54,15 @@ mod set_code_hash {
     #[cfg(test)]
     mod tests {
         use super::*;
+
         #[ink::test]
+        #[should_panic]
         fn update_code_works() {
-            // Arrange
             let original_contract = SetCodeHash::new();
             let code_hash = [0x42; 32];
-            // Act
+
             let res = original_contract.update_code(code_hash);
 
-            // Assert
             assert_eq!(res, Ok(()));
         }
     }
@@ -62,21 +76,24 @@ mod set_code_hash {
 
         #[ink_e2e::test(additional_contracts = "../contract_replacement/Cargo.toml")]
         async fn update_code_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Arrange
-            let original_contract_contructor = SetCodeHashRef::new();
-            let original_contract_acc_id = client
-                .instantiate(
-                    "set-code-hash",
-                    &ink_e2e::alice(),
-                    original_contract_contructor,
-                    0,
-                    None,
-                )
+            // Instantiate contract
+            let constructor = SetCodeHashRef::new();
+            let contract_acc_id = client
+                .instantiate("set-code-hash", &ink_e2e::alice(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
 
-            let new_code_hash = client
+            // Get original code hash
+            let get_code = build_message::<SetCodeHashRef>(contract_acc_id.clone())
+                .call(|contract| contract.get_code());
+            let original_code_hash = client
+                .call_dry_run(&ink_e2e::alice(), &get_code, 0, None)
+                .await
+                .return_value();
+
+            // Get contract's replacement code hash
+            let new_code_hash: [u8; 32] = client
                 .upload("contract-replacement", &ink_e2e::alice(), None)
                 .await
                 .expect("uploading `contract-replacement` failed")
@@ -85,13 +102,26 @@ mod set_code_hash {
                 .try_into()
                 .unwrap();
 
-            // Act
-            let update_code = build_message::<SetCodeHashRef>(original_contract_acc_id.clone())
+            // Check code hashes initially are different
+            assert_ne!(new_code_hash.as_ref(), original_code_hash.as_ref());
+
+            // Update contract's code hash
+            let update_code = build_message::<SetCodeHashRef>(contract_acc_id.clone())
                 .call(|contract| contract.update_code(new_code_hash));
-            let get_res = client.call(&ink_e2e::alice(), update_code, 0, None).await;
+            let update_code_res = client.call(&ink_e2e::alice(), update_code, 0, None).await;
 
             // Assert
-            assert!(get_res.is_ok());
+            assert!(update_code_res.is_ok());
+
+            // Compare codes
+            let get_code = build_message::<SetCodeHashRef>(contract_acc_id.clone())
+                .call(|contract| contract.get_code());
+            let updated_code_hash = client
+                .call_dry_run(&ink_e2e::alice(), &get_code, 0, None)
+                .await
+                .return_value();
+
+            assert_eq!(new_code_hash.as_ref(), updated_code_hash.as_ref());
 
             Ok(())
         }

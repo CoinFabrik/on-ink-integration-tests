@@ -26,6 +26,7 @@ mod contract_replacement {
             }
         }
 
+        /// Sets new code hash to contract
         #[ink(message)]
         pub fn update_code(&self, value: [u8; 32]) -> Result<(), Error> {
             if self.admin != Self::env().caller() {
@@ -39,6 +40,20 @@ mod contract_replacement {
             }
 
             Ok(())
+        }
+
+        /// Returns the codehash of the contract
+        #[ink(message)]
+        pub fn get_code(&self) -> Hash {
+            self.env()
+                .code_hash(&self.env().account_id())
+                .expect("Failed to get code hash")
+        }
+    }
+
+    impl Default for ContractReplacement {
+        fn default() -> Self {
+            Self::new()
         }
     }
 }
