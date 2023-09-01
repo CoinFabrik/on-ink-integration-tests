@@ -33,8 +33,8 @@ mod gas_left {
         #[ink::test]
         #[should_panic]
         fn get_gas_left() {
-            let gas_left = GasLeft::new();
-            assert_eq!(gas_left.get_gas_left(), 1);
+            let contract = GasLeft::new();
+            assert!(contract.get_gas_left() > 0);
         }
     }
 
@@ -59,13 +59,16 @@ mod gas_left {
                 .account_id;
 
             // Then
-            let get_gas_left = build_message::<GasLeftRef>(contract_acc_id.clone())
+            let get_gas_left = build_message::<GasLeftRef>(contract_acc_id)
                 .call(|contract| contract.get_gas_left());
-            let _get_gas_left_res = client
+            let get_gas_left_res = client
                 .call(&ink_e2e::bob(), get_gas_left, 0, None)
                 .await
-                .expect("get_gas_left failed");
+                .expect("get_gas_left failed")
+                .return_value();
 
+            // Assert that the gas left is greater than zero
+            assert!(get_gas_left_res > 0);
             Ok(())
         }
     }
