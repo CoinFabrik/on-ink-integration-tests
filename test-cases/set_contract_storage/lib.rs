@@ -16,13 +16,14 @@ mod set_contract_storage {
             Self {}
         }
 
-        /// Calculates the profit for a given percentage of the total profit.
+        /// Stores an array that is JUST big enough to be validly allocated.
         #[ink(message)]
         pub fn set_storage_big(&self){
             set_contract_storage(&42, &[42u8; SIZE_LIMIT]);
         }
 
-        /// Calculates the profit for a given percentage of the total profit.
+        /// Tries to store the smallest array that is too big to be validly
+        /// allocated. This function should always fail.
         #[ink(message)]
         pub fn set_storage_very_big(&self){
             set_contract_storage(&42, &[42u8; SIZE_LIMIT + 1]);
@@ -53,9 +54,6 @@ mod set_contract_storage {
 
             // When
             contract.set_storage_very_big();
-
-            // Then
-            assert_eq!(0, 0);
         }
     }
 
