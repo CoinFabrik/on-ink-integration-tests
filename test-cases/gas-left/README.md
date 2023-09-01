@@ -1,22 +1,35 @@
-# Template
+# Function `gas_left`
+
+```rust
+pub fn gas_left<E>() -> Gas
+```
 
 ## Description
 
-Minimum description of tested functionality.
+Returns the amount of gas left for the contract execution.
 
 ## Related ink! functions
 
-- List of functions called in the ink repository
+- [`gas_left`](https://paritytech.github.io/ink/ink_env/fn.gas_left.html)
 
 ## Test case
 
-How the test cases actually tests the given functionality.
+The contract has a single function that returns remaining gas:
+
+```rust
+#[ink(message)]
+pub fn get_gas_left(&self) -> u64 {
+    self.env().gas_left()
+}
+```
+
+We thought on the the simplest code to enable the execution of `gas_left` function in different testing environments. We condider a case successfull if returned gas left value is a no-null integer.
+
+Further testing can be performed in order to check gas calculation and address edge cases. However, for the current scope of this comparison instance, these aspects are not within consideration.
 
 ## Comparison Integration vs E2E
 
-Description if the function called worked on integration, E2E or both.
-
-Differences found in implementation.
+`gas_left` worked correctly in E2E and did not on Integration since it is [unimplemented](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/engine/src/ext.rs#L405).
 
 ## Result
 
