@@ -37,7 +37,7 @@ mod custom_default_accounts {
             let integration_alice_account_id = integration_test_accounts.alice;
             let integration_bob_account_id = integration_test_accounts.bob;
             let integration_charlie_account_id = integration_test_accounts.charlie;
-            let integration_dave_account_id = integration_test_accounts.django;
+            let integration_django_account_id = integration_test_accounts.django;
             let integration_eve_account_id = integration_test_accounts.eve;
             let integration_frank_account_id = integration_test_accounts.frank;
 
@@ -55,7 +55,7 @@ mod custom_default_accounts {
             assert_eq!(integration_alice_account_id, e2e_alice_account_id);
             assert_eq!(integration_bob_account_id, e2e_bob_account_id);
             assert_eq!(integration_charlie_account_id, e2e_charlie_account_id);
-            assert_eq!(integration_dave_account_id, e2e_dave_account_id);
+            assert_eq!(integration_django_account_id, e2e_dave_account_id); // Django does not exist in e2e, dave does not exist in integration tests
             assert_eq!(integration_eve_account_id, e2e_eve_account_id);
             assert_eq!(integration_frank_account_id, e2e_ferdie_account_id); // Frank does not exist in e2e, ferdie does not exist in integration tests
         }
