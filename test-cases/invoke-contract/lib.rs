@@ -40,6 +40,7 @@ mod invoke_contract {
         use super::*;
 
         #[ink::test]
+        #[should_panic]
         fn invoke_contract_works() {
             // Given
             let contract = InvokeContract::new();
@@ -62,7 +63,31 @@ mod invoke_contract {
 
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-        #[ink_e2e::test(additional_contracts = "../contract_to_call/Cargo.toml")]
+        #[ink_e2e::test]
+        #[should_panic]
+        async fn invoke_contract_account_doesnt_exist(mut client: ink_e2e::Client<C, E>) {
+            let original_contract_contructor = InvokeContractRef::new();
+            let original_contract_acc_id = client
+                .instantiate(
+                    "invoke_contract",
+                    &ink_e2e::alice(),
+                    original_contract_contructor,
+                    0,
+                    None
+                ).await
+                .expect("instantiate failed").account_id;
+
+            // Then
+            let delegate_call = build_message::<InvokeContractRef>(
+                original_contract_acc_id.clone()
+            ).call(|contract| contract.delegate_call([0x42; 32]));
+
+            client
+                .call(&ink_e2e::alice(), delegate_call, 0, None).await
+                .expect("Account id doesn't exist");
+        }
+
+        #[ink_e2e::test(additional_contracts = "./contract_to_call/Cargo.toml")]
         async fn invoke_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let original_contract_contructor = InvokeContractRef::new();
