@@ -20,7 +20,7 @@ mod invoke_contract {
         // If the account id of the sent contract is not valid it will fail.
         #[ink(message)]
         pub fn delegate_call(&self, contract_to_call: [u8; 32]) -> u64 {
-            build_call::<DefaultEnvironment>()
+            let call = build_call::<DefaultEnvironment>()
                 .call(AccountId::from(contract_to_call))
                 .gas_limit(0)
                 .transferred_value(0)
@@ -30,7 +30,14 @@ mod invoke_contract {
                         .push_arg(100u64),
                 )
                 .returns::<u64>()
-                .invoke()
+                .params();
+
+            self.env()
+                .invoke_contract(&call)
+                .unwrap_or_else(|env_err| {
+                    panic!("Received an error from the Environment: {:?}", env_err)
+                })
+                .unwrap_or_else(|lang_err| panic!("Received a `LangError`: {:?}", lang_err))
         }
     }
 

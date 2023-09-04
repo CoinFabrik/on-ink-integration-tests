@@ -25,6 +25,8 @@ The e2e test works correctly since it delegates the call to the second contract.
 * Test 1: attemps to delegate the call to an invalid account id in E2E.
 * Test 2: attemps to delegate the call to a valid contract and check that the result is correct in E2E.
 
+These tests use the low level function [`invoke_contract`](https://paritytech.github.io/ink/ink_env/fn.invoke_contract.html) but in the documentation it is recommended to use the [`invoke`](https://paritytech.github.io/ink/src/ink_env/call/call_builder.rs.html#679-681) function which has a type safe approach.
+
 
 ## Comparison Integration vs E2E
 
