@@ -19,7 +19,7 @@ mod invoke_contract {
         // Try to call the 'split_profit' function of the contract sent by parameter.
         // If the account id of the sent contract is not valid it will fail.
         #[ink(message)]
-        pub fn delegate_call(&self, contract_to_call: [u8; 32]) -> u64 {
+        pub fn invoke_call(&self, contract_to_call: [u8; 32]) -> u64 {
             let call = build_call::<DefaultEnvironment>()
                 .call(AccountId::from(contract_to_call))
                 .gas_limit(0)
@@ -54,14 +54,11 @@ mod invoke_contract {
         #[ink::test]
         #[should_panic]
         fn invoke_contract_works() {
-            // Given
             let contract = InvokeContract::new();
             let other_contract_mock = [0x42; 32];
 
-            // When
-            let profit = contract.delegate_call(other_contract_mock);
+            let profit = contract.invoke_call(other_contract_mock);
 
-            // Then
             assert_eq!(profit, 10u64);
         }
     }
@@ -91,24 +88,19 @@ mod invoke_contract {
                 .expect("instantiate failed")
                 .account_id;
 
-            // Then
-            let delegate_call =
-                build_message::<InvokeContractRef>(original_contract_acc_id.clone())
-                    .call(|contract| contract.delegate_call([0x42; 32]));
+            let invoke_call = build_message::<InvokeContractRef>(original_contract_acc_id.clone())
+                .call(|contract| contract.invoke_call([0x42; 32]));
 
             client
-                .call(&ink_e2e::alice(), delegate_call, 0, None)
+                .call(&ink_e2e::alice(), invoke_call, 0, None)
                 .await
                 .expect("Account id doesn't exist");
         }
 
         #[ink_e2e::test(additional_contracts = "./contract_to_call/Cargo.toml")]
         async fn invoke_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
             let original_contract_contructor = InvokeContractRef::new();
             let contract_to_call_constructor = ContractToCallRef::new();
-
-            // When
 
             let original_contract_acc_id = client
                 .instantiate(
@@ -134,11 +126,9 @@ mod invoke_contract {
                 .expect("instantiate failed")
                 .account_id;
 
-            // Then
-            let delegate_call =
-                build_message::<InvokeContractRef>(original_contract_acc_id.clone())
-                    .call(|contract| contract.delegate_call(*contract_to_call_acc_id.as_ref()));
-            let profit_res = client.call(&ink_e2e::alice(), delegate_call, 0, None).await;
+            let invoke_call = build_message::<InvokeContractRef>(original_contract_acc_id.clone())
+                .call(|contract| contract.invoke_call(*contract_to_call_acc_id.as_ref()));
+            let profit_res = client.call(&ink_e2e::alice(), invoke_call, 0, None).await;
 
             assert_eq!(
                 profit_res
