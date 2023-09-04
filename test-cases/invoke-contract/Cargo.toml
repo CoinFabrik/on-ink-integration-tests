@@ -21,7 +21,7 @@ e2e-tests = []
 ink = { version = "4.2.1", default-features = false }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
-contract_to_call = { path = "/mnt/dev-disk/OnInk/on-ink-integration-tests/test-cases/invoke-contract/contract_to_call", default-features = false, features = ["ink-as-dependency"] }
+contract_to_call = { path = "./contract_to_call", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
 ink_e2e = "4.2.1"
