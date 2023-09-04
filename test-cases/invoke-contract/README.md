@@ -12,7 +12,7 @@ where
 
 ## Description
 
-Minimum description of tested functionality.
+`invoke_contract` is a low-level way to evaluate another smart contract. Invokes a contract message and returns its result.
 
 ## Related ink! functions
 
@@ -20,7 +20,11 @@ Minimum description of tested functionality.
 
 ## Test case
 
-Both test cases implement the contract logic and attempt to use the `invoke_contract` functions.
+The e2e test works correctly since it delegates the call to the second contract. It also fails when the account id of the contract to which the call is delegated is invalid.
+
+* Test 1: attemps to delegate the call to an invalid account id in E2E.
+* Test 2: attemps to delegate the call to a valid contract and check that the result is correct in E2E.
+
 
 ## Comparison Integration vs E2E
 

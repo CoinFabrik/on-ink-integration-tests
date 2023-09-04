@@ -13,6 +13,8 @@ mod invoke_contract {
             Self {}
         }
 
+        // Try to call the 'split_profit' function of the contract sent by parameter.
+        // If the account id of the sent contract is not valid it will fail.
         #[ink(message)]
         pub fn delegate_call(&self, contract_to_call: [u8; 32]) -> u64 {
             build_call::<DefaultEnvironment>()
