@@ -42,7 +42,6 @@ mod invoke_contract {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn invoke_contract_works() {
             // Given
             let contract = InvokeContract::new();
