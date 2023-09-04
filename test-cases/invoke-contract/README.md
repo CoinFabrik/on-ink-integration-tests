@@ -4,10 +4,6 @@
 pub fn invoke_contract<E, Args, R>(
     params: &CallParams<E, Call<E>, Args, R>,
 ) -> Result<ink_primitives::MessageResult<R>>
-where
-    E: Environment,
-    Args: scale::Encode,
-    R: scale::Decode,
 ```
 
 ## Description
@@ -17,20 +13,26 @@ where
 ## Related ink! functions
 
 - [`invoke_contract`](https://paritytech.github.io/ink/ink_env/fn.invoke_contract.html)
+- [`invoke`](https://paritytech.github.io/ink/src/ink_env/call/call_builder.rs.html#679-681)
 
 ## Test case
 
-The e2e test works correctly since it delegates the call to the second contract. It also fails when the account id of the contract to which the call is delegated is invalid.
+The original contract initiates a call to another pre-existing contract, denoted as `contract_to_call`. It invokes a straightforward function (`split_profit`) with hardcoded arguments, ensuring determinism in the results for the purpose of specifically test the contract invocation. In End-to-End testing phase, it was also verified that it fails when the `account_id` of the contract to which the call is delegated is invalid.
 
-* Test 1: attemps to delegate the call to an invalid account id in E2E.
-* Test 2: attemps to delegate the call to a valid contract and check that the result is correct in E2E.
-
-These tests use the low level function [`invoke_contract`](https://paritytech.github.io/ink/ink_env/fn.invoke_contract.html) but in the documentation it is recommended to use the [`invoke`](https://paritytech.github.io/ink/src/ink_env/call/call_builder.rs.html#679-681) function which has a type safe approach.
-
+These tests use the low-level function [`invoke_contract`](https://paritytech.github.io/ink/ink_env/fn.invoke_contract.html) but in the documentation it is recommended to use the [`invoke`](https://paritytech.github.io/ink/src/ink_env/call/call_builder.rs.html#679-681) function which has a type safe approach. This approach should be taken into account for testing beyond this initial comparison instance.
 
 ## Comparison Integration vs E2E
 
-Test case worked in End-to-End but did not in Integration since it's [unimplemented](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/env/src/engine/off_chain/impls.rs#L432)
+The End-to-End test works correctly since it invokes successfully the call to the second contract. In Integration did not work since it's [unimplemented](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/env/src/engine/off_chain/impls.rs#L432).
+
+Integration:
+
+- Test 1: attemps to invoke a call to a mocked `account_id` and panics due to lack of implementation.
+
+End-to-End:
+
+- Test 1: attemps to invoke a call to an invalid `account_id`.
+- Test 2: attemps to invoke a call to a valid contract and checks that the result obtained is correct.
 
 ## Result
 
