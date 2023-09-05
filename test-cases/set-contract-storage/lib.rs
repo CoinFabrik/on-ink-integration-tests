@@ -36,23 +36,18 @@ mod set_contract_storage {
 
         #[ink::test]
         fn contract_storage_big() {
-            // Given
             let contract = SetContractStorage::new();
 
-            // When
             contract.set_storage_big();
 
-            // Then
             assert_eq!(0, 0);
         }
 
         #[ink::test]
         #[should_panic]
         fn contract_storage_too_big() {
-            // Given
             let contract = SetContractStorage::new();
 
-            // When
             contract.set_storage_very_big();
         }
     }
@@ -66,7 +61,7 @@ mod set_contract_storage {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn contract_storage_big_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn contract_storage_big(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let constructor = SetContractStorageRef::new();
 
             let contract_acc_id = client
@@ -94,7 +89,7 @@ mod set_contract_storage {
 
         #[ink_e2e::test]
         #[should_panic]
-        async fn contract_storage_too_big_e2e(mut client: ink_e2e::Client<C, E>) {
+        async fn contract_storage_too_big(mut client: ink_e2e::Client<C, E>) {
             let constructor = SetContractStorageRef::new();
 
             let contract_acc_id = client
