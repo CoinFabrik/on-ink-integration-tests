@@ -41,10 +41,7 @@ enum BalancesCall {
 
 #[ink::contract]
 mod runtime_call {
-    use crate::{
-        BalancesCall,
-        RuntimeCall,
-    };
+    use crate::{BalancesCall, RuntimeCall};
 
     use ink::env::Error as EnvError;
 
@@ -101,7 +98,7 @@ mod runtime_call {
         }
 
         #[ink(message)]
-        pub fn balance(&self) -> Balance{
+        pub fn balance(&self) -> Balance {
             self.env().balance()
         }
     }
@@ -117,7 +114,8 @@ mod runtime_call {
             let alice = AccountId::from([1u8; 32]);
 
             // When
-            contract.transfer_through_runtime(alice, 10u128.into())
+            contract
+                .transfer_through_runtime(alice, 10u128.into())
                 .expect("this must never fail");
 
             // Then
@@ -130,10 +128,7 @@ mod runtime_call {
         use super::*;
 
         use ink::{
-            env::{
-                test::default_accounts,
-                DefaultEnvironment,
-            },
+            env::{test::default_accounts, DefaultEnvironment},
             primitives::AccountId,
         };
         use ink_e2e::build_message;
@@ -157,9 +152,7 @@ mod runtime_call {
         ///  - the call is valid
         ///  - the call execution succeeds
         #[ink_e2e::test]
-        async fn test_call_runtime_e2e(
-            mut client: Client<C, E>,
-        ) -> E2EResult<()> {
+        async fn test_call_runtime_e2e(mut client: Client<C, E>) -> E2EResult<()> {
             // given
             let constructor = RuntimeCallerRef::new();
             let contract_acc_id = client
@@ -217,6 +210,5 @@ mod runtime_call {
 
             Ok(())
         }
-
     }
 }
