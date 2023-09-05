@@ -16,8 +16,8 @@ mod invoke_contract {
             Self {}
         }
 
-        // Try to call the 'split_profit' function of the contract sent by parameter.
-        // If the account id of the sent contract is not valid it will fail.
+        /// Try to call the `split_profit` function of the contract sent by parameter.
+        /// If the account id of the sent contract is not valid it will fail.
         #[ink(message)]
         pub fn invoke_call(&self, contract_to_call: [u8; 32]) -> bool {
             let call = build_call::<DefaultEnvironment>()
@@ -76,7 +76,7 @@ mod invoke_contract {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test(additional_contracts = "./contract_to_call/Cargo.toml")]
-        async fn call_contract_directly_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn call_contract_directly(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let contract_to_call_constructor = ContractToCallRef::new();
 
             let contract_to_call_acc_id = client
@@ -105,7 +105,7 @@ mod invoke_contract {
         }
 
         #[ink_e2e::test(additional_contracts = "./contract_to_call/Cargo.toml")]
-        async fn call_contract_indirectly_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn call_contract_indirectly(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let original_contract_contructor = InvokeContractRef::new();
             let contract_to_call_constructor = ContractToCallRef::new();
 
