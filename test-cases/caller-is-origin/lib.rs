@@ -24,9 +24,9 @@ mod invoke_contract {
                 .call(AccountId::from(contract_to_call))
                 .gas_limit(0)
                 .transferred_value(0)
-                .exec_input(
-                    ExecutionInput::new(Selector::new(ink::selector_bytes!("im_the_origin"))),
-                )
+                .exec_input(ExecutionInput::new(Selector::new(ink::selector_bytes!(
+                    "im_the_origin"
+                ))))
                 .returns::<bool>()
                 .params();
 
@@ -51,14 +51,14 @@ mod invoke_contract {
         use contract_to_call::ContractToCall;
 
         #[ink::test]
-        fn call_contract_directly(){
+        fn call_contract_directly() {
             let contract = ContractToCall::new();
             let is_the_origin = contract.im_the_origin();
             assert_eq!(is_the_origin, true);
         }
 
         #[ink::test]
-        fn call_contract_indirectly(){
+        fn call_contract_indirectly() {
             let contract = InvokeContract::new();
             let other_contract_mock = [0x42; 32];
             let is_the_origin = contract.invoke_call(other_contract_mock);
