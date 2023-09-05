@@ -24,5 +24,5 @@ Test case worked in End-to-End but did not in Integration since it's [unimplemen
 
 ## Result
 
-The function appears to depend on features also required by gas_left() and invoke_contract(); namely, storage and retrieval of secondary contracts, and gas calculations. Until those functions are implemented, it's unfeasible to estimate an implementation cost.
+The function appears to depend on features also required by gas_left() and instantiate_contract(); namely, storage and retrieval of secondary contracts, and gas calculations. Until those functions are implemented, it's unfeasible to estimate an implementation cost.
 On-chain implementation at frame/contracts/src/exec.rs:1489
