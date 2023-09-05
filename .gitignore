@@ -35,4 +35,4 @@ node_modules
 
 # Editors
 .vscode/
-!/.vscode/
+# !/.vscode/ commented until necessary
