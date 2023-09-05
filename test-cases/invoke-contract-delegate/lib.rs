@@ -2,28 +2,28 @@
 
 #[ink::contract]
 mod invoke_contract_delegate {
-    use ink::env::call::build_call;
+    use ink::env::call::{build_call, ExecutionInput, Selector};
+    use ink::env::DefaultEnvironment;
     #[ink(storage)]
-    pub struct InvokeContractDelegate {}
+    pub struct InvokeContractDelegate {
+        value: u128,
+    }
 
     impl InvokeContractDelegate {
         #[ink(constructor)]
         pub fn new() -> Self {
-            Self {}
+            Self { value: 15 }
         }
 
         #[ink(message)]
         pub fn delegate_call(&self, code_hash: Hash) -> u128 {
-            let delegate_params = build_call::<ink::env::DefaultEnvironment>()
+            build_call::<DefaultEnvironment>()
                 .delegate(code_hash)
-                .exec_input(ink::env::call::ExecutionInput::new(
-                    ink::env::call::Selector::new(ink::selector_bytes!("get_value")),
-                ))
+                .exec_input(ExecutionInput::new(Selector::new(ink::selector_bytes!(
+                    "get_value"
+                ))))
                 .returns::<u128>()
-                .params();
-
-            self.env()
-                .invoke_contract_delegate(&delegate_params)
+                .try_invoke()
                 .unwrap_or_else(|env_err| {
                     panic!("Received an error from the Environment: {:?}", env_err)
                 })
@@ -59,7 +59,7 @@ mod invoke_contract_delegate {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test(additional_contracts = "contract-to-call/Cargo.toml")]
-        async fn invoke_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn delegate_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let original_contract_contructor = InvokeContractDelegateRef::new();
             let original_contract_acc_id = client
                 .instantiate(
@@ -82,12 +82,13 @@ mod invoke_contract_delegate {
             let delegate_call =
                 build_message::<InvokeContractDelegateRef>(original_contract_acc_id)
                     .call(|contract| contract.delegate_call(contract_to_call_code_hash));
-            let profit_res = client
+            let value = client
                 .call(&ink_e2e::alice(), delegate_call, 0, None)
                 .await
-                .expect("call failed");
+                .expect("call failed")
+                .return_value();
 
-            // println!("profit_res: {:?}", profit_res.return_value());
+            assert_eq!(value, InvokeContractDelegate::new().value);
             Ok(())
         }
     }

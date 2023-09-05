@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
-pub use self::contract_to_call::ContractToCallRef;
+pub use self::contract_to_call::{ContractToCall, ContractToCallRef};
 
 #[ink::contract]
 mod contract_to_call {
