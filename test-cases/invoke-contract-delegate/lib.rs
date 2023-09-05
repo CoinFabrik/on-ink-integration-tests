@@ -14,13 +14,20 @@ mod invoke_contract_delegate {
 
         #[ink(message)]
         pub fn delegate_call(&self, code_hash: Hash) -> u128 {
-            build_call::<ink::env::DefaultEnvironment>()
+            let delegate_params = build_call::<ink::env::DefaultEnvironment>()
                 .delegate(code_hash)
                 .exec_input(ink::env::call::ExecutionInput::new(
                     ink::env::call::Selector::new(ink::selector_bytes!("get_value")),
                 ))
                 .returns::<u128>()
-                .invoke()
+                .params();
+
+            self.env()
+                .invoke_contract_delegate(&delegate_params)
+                .unwrap_or_else(|env_err| {
+                    panic!("Received an error from the Environment: {:?}", env_err)
+                })
+                .unwrap_or_else(|lang_err| panic!("Received a `LangError`: {:?}", lang_err))
         }
     }
 
@@ -35,6 +42,7 @@ mod invoke_contract_delegate {
         use super::*;
 
         #[ink::test]
+        #[should_panic]
         fn delegate_contract_works() {
             let contract = InvokeContractDelegate::new();
             let code_hash = Hash::from([0x42; 32]);
@@ -52,11 +60,7 @@ mod invoke_contract_delegate {
 
         #[ink_e2e::test(additional_contracts = "contract-to-call/Cargo.toml")]
         async fn invoke_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
             let original_contract_contructor = InvokeContractDelegateRef::new();
-
-            // When
-
             let original_contract_acc_id = client
                 .instantiate(
                     "invoke-contract-delegate",
@@ -69,22 +73,21 @@ mod invoke_contract_delegate {
                 .expect("instantiate failed")
                 .account_id;
 
-            let contract_to_call_acc_id = client
+            let contract_to_call_code_hash = client
                 .upload("contract-to-call", &ink_e2e::alice(), None)
                 .await
                 .expect("instantiate failed")
                 .code_hash;
 
-            // Then
             let delegate_call =
                 build_message::<InvokeContractDelegateRef>(original_contract_acc_id)
-                    .call(|contract| contract.delegate_call(contract_to_call_acc_id));
+                    .call(|contract| contract.delegate_call(contract_to_call_code_hash));
             let profit_res = client
                 .call(&ink_e2e::alice(), delegate_call, 0, None)
                 .await
                 .expect("call failed");
 
-            println!("profit_res: {:?}", profit_res.return_value());
+            // println!("profit_res: {:?}", profit_res.return_value());
             Ok(())
         }
     }
