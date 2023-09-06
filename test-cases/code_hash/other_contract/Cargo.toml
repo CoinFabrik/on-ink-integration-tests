@@ -1,5 +1,5 @@
 [package]
-name = "code_hash"
+name = "other_contract"
 version = "0.1.0"
 edition = "2021"
 authors = ["[your_name] <[your_email]>"]
@@ -21,7 +21,6 @@ e2e-tests = []
 ink = { version = "4.2.1", default-features = false }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
-other_contract = { path = "./other_contract", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
 ink_e2e = "4.2.1"
