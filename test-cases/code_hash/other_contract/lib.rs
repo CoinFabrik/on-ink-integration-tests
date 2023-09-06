@@ -14,10 +14,10 @@ mod other_contract {
             Self {}
         }
 
-        /// Calculates the profit for a given percentage of the total profit.
+        /// Returns the hash code of the contract through the function 'own_code_hash'.
         #[ink(message)]
-        pub fn split_profit(&self, percentage: u64, total_profit: u64) -> u64 {
-            total_profit / percentage
+        pub fn own_code_hash(&self) -> Hash {
+            self.env().own_code_hash().unwrap()
         }
     }
 
