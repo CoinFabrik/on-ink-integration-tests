@@ -1,7 +1,5 @@
 # Function `invoke_contract`
 
-### Off-chain:
-
 ```rust
 pub fn invoke_contract_delegate<E, Args, R>(
     params: &CallParams<E, DelegateCall<E>, Args, R>
