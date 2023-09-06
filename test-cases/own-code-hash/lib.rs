@@ -16,6 +16,14 @@ mod own_code_hash {
         pub fn own_code_hash(&self) -> Hash {
             self.env().own_code_hash().unwrap()
         }
+
+        /// Returns the code hash of the contract
+        #[ink(message)]
+        pub fn get_code(&self) -> Hash {
+            self.env()
+                .code_hash(&self.env().account_id())
+                .expect("Failed to get code hash")
+        }
     }
 
     impl Default for OwnCodeHash {
@@ -31,7 +39,11 @@ mod own_code_hash {
         #[ink::test]
         fn get_own_code_hash() {
             let own_code_hash = OwnCodeHash::new();
-            assert_eq!(own_code_hash.own_code_hash(), Hash::from([0x0; 32]));
+
+            let code_hash_via_own: Hash = own_code_hash.own_code_hash();
+
+            // Ideally we should compare it the code obtained via code_hash (but it is also unimplemented)
+            assert_eq!(code_hash_via_own, Hash::from([0x0; 32]));
         }
     }
 
@@ -44,19 +56,34 @@ mod own_code_hash {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn get_own_code_hash_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn get_own_code_hash(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let constructor = OwnCodeHashRef::new();
             let contract_acc_id = client
                 .instantiate("own_code_hash", &ink_e2e::bob(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
+
             let own_code_hash = build_message::<OwnCodeHashRef>(contract_acc_id)
                 .call(|contract| contract.own_code_hash());
-            client
+            let own_code_hash_res = client
                 .call(&ink_e2e::bob(), own_code_hash, 0, None)
                 .await
-                .expect("split_profit failed");
+                .expect("own_code_hash failed");
+
+            // Compare codes obtained differently with own_code_hash and code_hash
+            let get_code = build_message::<OwnCodeHashRef>(contract_acc_id)
+                .call(|contract| contract.get_code());
+            let get_code_res = client
+                .call(&ink_e2e::alice(), get_code, 0, None)
+                .await
+                .expect("get_code failed");
+
+            let code_hash_via_own = own_code_hash_res.return_value();
+            let code_hash_via_get = get_code_res.return_value();
+
+            assert_eq!(code_hash_via_own, code_hash_via_get);
+
             Ok(())
         }
     }
