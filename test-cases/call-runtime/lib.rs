@@ -109,16 +109,14 @@ mod runtime_call {
 
         #[ink::test]
         fn test_call_runtime() {
-            // Given
             let mut contract = RuntimeCaller::new();
             let alice = AccountId::from([1u8; 32]);
 
-            // When
             contract
                 .transfer_through_runtime(alice, 10u128.into())
                 .expect("this must never fail");
 
-            // Then
+            // Needs balanace check here.
             assert_eq!(0, 0);
         }
     }
@@ -152,7 +150,7 @@ mod runtime_call {
         ///  - the call is valid
         ///  - the call execution succeeds
         #[ink_e2e::test]
-        async fn test_call_runtime_e2e(mut client: Client<C, E>) -> E2EResult<()> {
+        async fn test_call_runtime(mut client: Client<C, E>) -> E2EResult<()> {
             // given
             let constructor = RuntimeCallerRef::new();
             let contract_acc_id = client
