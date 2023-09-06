@@ -3,25 +3,9 @@
 ### Off-chain:
 
 ```rust
-fn invoke_contract_delegate<E, Args, R>(
-    &mut self,
-    params: &CallParams<E, DelegateCall<E>, Args, R>,
-) -> Result<ink_primitives::MessageResult<R>>
-```
-
-### On-chain:
-
-```rust
-fn delegate_call(
-		ctx: _,
-		memory: _,
-		flags: u32,
-		code_hash_ptr: u32,
-		input_data_ptr: u32,
-		input_data_len: u32,
-		output_ptr: u32,
-		output_len_ptr: u32,
-	) -> Result<ReturnCode, TrapReason>
+pub fn invoke_contract_delegate<E, Args, R>(
+    params: &CallParams<E, DelegateCall<E>, Args, R>
+) -> Result<MessageResult<R>>
 ```
 
 ## Description
@@ -32,8 +16,7 @@ It's imperative to understand that if the delegate call interacts with the stora
 
 ## Related ink! functions
 
-- [`invoke_contract_delegate`](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/env/src/engine/off_chain/impls.rs#L449)
-- [`delegate_call`](https://github.com/paritytech/substrate/blob/28e906dffcaa91e85f59aff628d953ebeb036ae2/frame/contracts/src/wasm/runtime.rs#L1467)
+- [`invoke_contract_delegate`](https://docs.rs/ink_env/latest/ink_env/fn.invoke_contract_delegate.html)
 
 ## Test case
 
@@ -41,11 +24,11 @@ The primary contract initiates a delegate call to a secondary, pre-existing cont
 
 ## Comparison Integration vs E2E
 
-While the end-to-end test operates correctly by successfully delegating the call to the secondary contract, the integration test falters. The failure of the integration test arises from yet-to-be-implemented functionalities, such as contract delegation and code hash operations.
+While the end-to-end test operates correctly by successfully delegating the call to the secondary contract, the integration test falters. The failure of the integration test arises from [`yet-to-be-implemented`](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/env/src/engine/off_chain/impls.rs#L449) functionalities, such as contract delegation and code hash operations.
 
-- Integration: The test failed due to unimplemented logic. Panic error: `not implemented: off-chain environment does not support delegated contract invocation`.
-
-- End-to-end: The test was successfully executed.
+| \#  | Test                                                    | Integration | E2E |
+| --- | ------------------------------------------------------- | :---------: | :-: |
+| 1   | Attempts to get the code hash of the executing contract |     ❌      | ✅  |
 
 ## Result
 
