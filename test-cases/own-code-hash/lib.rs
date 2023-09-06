@@ -12,12 +12,13 @@ mod own_code_hash {
             Self {}
         }
 
+        /// Returns the code hash of the contract
         #[ink(message)]
         pub fn own_code_hash(&self) -> Hash {
             self.env().own_code_hash().unwrap()
         }
 
-        /// Returns the code hash of the contract
+        /// Returns the code hash of the contract by providing it's `account_id`
         #[ink(message)]
         pub fn get_code(&self) -> Hash {
             self.env()
