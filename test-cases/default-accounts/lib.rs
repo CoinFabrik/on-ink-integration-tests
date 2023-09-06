@@ -95,21 +95,6 @@ mod custom_default_accounts {
 
         #[ink::test]
         #[should_panic]
-        fn test_unimplemented_accounts() {
-            let e2e_one_account_id: AccountId = ink_e2e::AccountKeyring::One.to_raw_public().into();
-            let e2e_two_account_id: AccountId = ink_e2e::AccountKeyring::Two.to_raw_public().into();
-
-            let integration_one_account_id: AccountId = AccountId::from([0x01; 32]);
-            let integration_two_account_id: AccountId = AccountId::from([0x02; 32]);
-
-            println!("There is no One or Two in integration test accounts, e2e accounts are \nOne: {:?}, \nTwo: {:?}", e2e_one_account_id, e2e_two_account_id);
-
-            assert_eq!(integration_one_account_id, e2e_one_account_id);
-            assert_eq!(integration_two_account_id, e2e_two_account_id);
-        }
-
-        #[ink::test]
-        #[should_panic]
         fn test_frank_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -120,6 +105,36 @@ mod custom_default_accounts {
 
             // There is no Frank in the e2e test accounts, there is no Ferdie in the integration test accounts
             assert_eq!(integration_frank_account_id, e2e_frank_account_id);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn test_one_account() {
+            let e2e_one_account_id: AccountId = ink_e2e::AccountKeyring::One.to_raw_public().into();
+
+            let integration_one_account_id: AccountId = AccountId::from([0x01; 32]);
+
+            println!(
+                "There is no One in Integration test accounts, which is \nOne: {:?}",
+                e2e_one_account_id
+            );
+
+            assert_eq!(integration_one_account_id, e2e_one_account_id);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn test_two_account() {
+            let e2e_two_account_id: AccountId = ink_e2e::AccountKeyring::Two.to_raw_public().into();
+
+            let integration_two_account_id: AccountId = AccountId::from([0x02; 32]);
+
+            println!(
+                "There is no Two in Integration test accounts, which is \nTwo: {:?}",
+                e2e_two_account_id
+            );
+
+            assert_eq!(integration_two_account_id, e2e_two_account_id);
         }
     }
 }

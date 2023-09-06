@@ -10,9 +10,9 @@ On Integration, function resides within [`ink_env::test`](https://paritytech.git
 pub fn default_accounts<T>() -> DefaultAccounts<T>
 ```
 
-and each address holds different amounts of value.
+and each address holds different amounts of value. There are in total 6 test default accounts ("A" to "F").
 
-On End-to-End there's no such implementation but an [`ink_e2e::AccountKeyring`](https://paritytech.github.io/ink/ink_e2e/enum.AccountKeyring.html) `enum` type which provides the default test accounts.
+On End-to-End there's no such implementation but an [`ink_e2e::AccountKeyring`](https://paritytech.github.io/ink/ink_e2e/enum.AccountKeyring.html) `enum` type which provides the default test accounts. There are in total 8 test default accounts ("A" to "F" and two more extra).
 
 ## Related ink! functions and types
 
@@ -22,13 +22,22 @@ On End-to-End there's no such implementation but an [`ink_e2e::AccountKeyring`](
 
 ## Test case
 
-How the test cases actually tests the given functionality.
+There is a test case corresponding to each default account in the End-to-End environment, checking that the address is the same in Integration one. After this exploration-instance, it is desibrable to also examine balance consistency.
+
+| \#  | Test                                                            | Integration | E2E |
+| --- | --------------------------------------------------------------- | :---------: | :-: |
+| 1   | The "A" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "B" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "C" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "D" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "E" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "F" default account in Integration is the same as in E2E.   |     ❌      | ✅  |
+| 2   | The "One" default account in Integration is the same as in E2E. |     ❌      | ✅  |
+| 2   | The "Two" default account in Integration is the same as in E2E. |     ❌      | ✅  |
 
 ## Comparison Integration vs E2E
 
-Description if the function called worked on integration, E2E or both.
-
-Differences found in implementation.
+All default accounts addresses are different. Furthermore, there is a disparity in the fantasy names assigned to accounts "D" and "F." Additionally, the default accounts "One" and "Two" are two additional accounts present in E2E but absent in the Integration environment.
 
 ## Result
 
