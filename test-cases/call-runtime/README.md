@@ -30,7 +30,4 @@ Test 1 worked as expected in End-to-End and in Integration currently fails becau
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+Implementing this function is unfeasible, as it would require emulating practically the entire node to get consistent results. Testing a contract function that calls into the runtime should be done using E2E tests.
