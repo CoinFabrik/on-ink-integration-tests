@@ -36,7 +36,6 @@ mod code_hash {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn get_own_code_hash() {
             let contract = CodeHash::new();
 
@@ -44,7 +43,6 @@ mod code_hash {
         }
 
         #[ink::test]
-        #[should_panic]
         fn get_other_code_hash() {
             let contract = CodeHash::new();
 
