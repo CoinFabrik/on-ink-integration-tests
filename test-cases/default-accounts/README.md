@@ -41,7 +41,4 @@ All default accounts addresses are different. Furthermore, there is a disparity 
 
 ## Result
 
-- Can it be implemented? Yes
-- How long will it take?
-- Ideas for implementation
-- Other notes
+This is relatively trivial. It can be implemented in a single day. For backwards compatibility django and frank should retain their current names, and dave and ferdie added as their respective aliases.
