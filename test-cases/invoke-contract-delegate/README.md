@@ -1,4 +1,4 @@
-# Function `invoke_contract`
+# Function `invoke_contract_delegate`
 
 ```rust
 pub fn invoke_contract_delegate<E, Args, R>(
@@ -30,7 +30,4 @@ While the end-to-end test operates correctly by successfully delegating the call
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+This function has a lot of overlap with invoke_contract. Once one of the two is implemented the other one should cost only a few more days.
