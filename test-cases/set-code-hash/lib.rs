@@ -56,7 +56,6 @@ mod set_code_hash {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn update_code_works() {
             let original_contract = SetCodeHash::new();
             let code_hash = [0x42; 32];
@@ -74,7 +73,7 @@ mod set_code_hash {
 
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-        #[ink_e2e::test(additional_contracts = "contract_replacement/Cargo.toml")]
+        #[ink_e2e::test(additional_contracts = "./contract_replacement/Cargo.toml")]
         async fn update_code_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Instantiate contract
             let constructor = SetCodeHashRef::new();

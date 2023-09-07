@@ -18,6 +18,10 @@ pub fn set_code_hash(code_hash: &[u8; 32]) -> Result<()>
 
 The test case presents a scenario in which the `set_code_hash` function is implemented within a vulnerable setup (lacking caller verification). Thus, our goal is to substitute this with a secure implementation. Both test cases attempt to use the `set_code_hash` function.
 
+| \#  | Test                                                           | Integration | E2E |
+| --- | -------------------------------------------------------------- | :---------: | :-: |
+| 1   | Attempts to set a new code hash on an already deployed contact |     ❌      | ✅  |
+
 ## Comparison Integration vs E2E
 
 Test case worked in End-to-End but did not in Integration since it's [unimplemented](https://github.com/paritytech/ink/blob/c2af39883aab48c71dc09dac5d06583f2e84dc54/crates/env/src/engine/off_chain/impls.rs#L361). In the latter context, we proposed an arbitrary `code_hash` since there's no other contract/`code_hash` in the mocked environment to be replaced by.
