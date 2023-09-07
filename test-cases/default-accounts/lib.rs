@@ -30,7 +30,6 @@ mod custom_default_accounts {
         use ink_e2e;
 
         #[ink::test]
-        #[should_panic]
         fn test_alice_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -43,7 +42,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_bob_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -55,7 +53,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_charlie_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -68,7 +65,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_dave_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -82,7 +78,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_eve_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -94,7 +89,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_frank_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
@@ -108,7 +102,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_one_account() {
             let e2e_one_account_id: AccountId = ink_e2e::AccountKeyring::One.to_raw_public().into();
 
@@ -123,7 +116,6 @@ mod custom_default_accounts {
         }
 
         #[ink::test]
-        #[should_panic]
         fn test_two_account() {
             let e2e_two_account_id: AccountId = ink_e2e::AccountKeyring::Two.to_raw_public().into();
 
