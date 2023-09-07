@@ -42,7 +42,6 @@ mod invoke_contract_delegate {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn delegate_contract_works() {
             let contract = InvokeContractDelegate::new();
             let code_hash = Hash::from([0x42; 32]);
