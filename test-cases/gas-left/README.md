@@ -37,6 +37,10 @@ Further testing can be performed in order to check gas calculation and address e
 
 ## Result
 
+Updated estimate: Because integration tests are performed on native code rather than WASM code, and because gas cost is based on number of WASM instructions executed, implementing this function is impractically complex.
+
+Previous estimate:
+
 E2E implementation:
 
 ```rust
