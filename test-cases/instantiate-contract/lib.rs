@@ -8,40 +8,26 @@ mod instantiate_contract {
     pub struct InstantiateContract {}
 
     impl InstantiateContract {
-        /// Creates a new Template contract.
         #[ink(constructor)]
         pub fn new() -> Self {
             Self {}
         }
 
-        /// Calculates the profit for a given percentage of the total profit.
-        #[ink(message)]
-        pub fn split_profit(&self, percentage: u64, total_profit: u64) -> u64 {
-            (percentage / 100) * total_profit
-        }
-
         #[ink(message)]
         pub fn instantiate_other_contract(&self, code_hash: Hash) -> OtherContractRef {
-            // let my_contract = ink::env::call::build_create::<OtherContractRef>()
-            //     .code_hash(Hash::from([0x42; 32]))
-            //     .gas_limit(4000)
-            //     .endowment(total_balance / 4)
-            //     .exec_input(ExecutionInput::new(ink::env::call::Selector::new(
-            //         ink::selector_bytes!("new"),
-            //     )))
-            //     .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
-            //     .returns::<OtherContractRef>()
-            //     .params();
-
-            let my_contract = OtherContractRef::new()
+            let create_params = ink::env::call::build_create::<OtherContractRef>()
                 .code_hash(code_hash)
-                .gas_limit(4000)
+                .gas_limit(0)
                 .endowment(0)
-                .salt_bytes([0x0; 4])
+                .exec_input(ink::env::call::ExecutionInput::new(
+                    ink::env::call::Selector::new(ink::selector_bytes!("new")),
+                ))
+                .salt_bytes(&[0x0; 4])
+                .returns::<OtherContractRef>()
                 .params();
 
             self.env()
-                .instantiate_contract(&my_contract)
+                .instantiate_contract(&create_params)
                 .unwrap_or_else(|error| {
                     panic!(
                         "Received an error from the Contracts pallet while instantiating: {:?}",
@@ -54,6 +40,12 @@ mod instantiate_contract {
         }
     }
 
+    impl Default for InstantiateContract {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -61,8 +53,8 @@ mod instantiate_contract {
         #[ink::test]
         fn split_profit_precision() {
             let contract = InstantiateContract::new();
-
-            contract.instantiate_other_contract([0x42; 32].into());
+            let code_hash = Hash::from([0x42; 32]);
+            let _ = contract.instantiate_other_contract(code_hash);
         }
     }
 
