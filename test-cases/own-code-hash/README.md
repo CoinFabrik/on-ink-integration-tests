@@ -28,7 +28,4 @@ Test 1 worked as expected in End-to-End but did not on Integration since it's [n
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+See estimate for code_hash().
