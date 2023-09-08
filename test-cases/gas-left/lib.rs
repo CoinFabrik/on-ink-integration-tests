@@ -29,7 +29,6 @@ mod gas_left {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn get_gas_left() {
             let contract = GasLeft::new();
             assert!(contract.get_gas_left() > 0);
@@ -45,7 +44,7 @@ mod gas_left {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn get_gas_left_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn get_gas_left(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let constructor = GasLeftRef::new();
             let contract_acc_id = client
                 .instantiate("gas-left", &ink_e2e::bob(), constructor, 0, None)

@@ -52,7 +52,6 @@ mod invoke_contract {
         use super::*;
 
         #[ink::test]
-        #[should_panic]
         fn invoke_contract_works() {
             let contract = InvokeContract::new();
             let other_contract_mock = [0x42; 32];

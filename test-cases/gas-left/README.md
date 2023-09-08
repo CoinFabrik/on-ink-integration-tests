@@ -25,6 +25,10 @@ pub fn get_gas_left(&self) -> u64 {
 
 We thought on the the simplest code to enable the execution of `gas_left` function in different testing environments. We condider a case successfull if returned gas left value is a no-null integer.
 
+| \#  | Test                                                           | Integration | E2E |
+| --- | -------------------------------------------------------------- | :---------: | :-: |
+| 1   | Attempts get the amount of gas left for the contract execution |     ❌      | ✅  |
+
 Further testing can be performed in order to check gas calculation and address edge cases. However, for the current scope of this comparison instance, these aspects are not within consideration.
 
 ## Comparison Integration vs E2E
@@ -34,7 +38,8 @@ Further testing can be performed in order to check gas calculation and address e
 ## Result
 
 E2E implementation:
-```
+
+```rust
 //https://github.com/paritytech/substrate.git:28e906dffcaa91e85f59aff628d953ebeb036ae2
 //frame/contracts/src/wasm/runtime.rs:1968
 /// Stores the weight left into the supplied buffer.
@@ -81,5 +86,6 @@ fn gas_left(ctx: _, memory: _, out_ptr: u32, out_len_ptr: u32) -> Result<(), Tra
 	)?)
 }
 ```
+
 The main implementation cost on integration is a missing stack structure to keep track of the {functions|contracts} (unsure which one, probably the latter) that have been executed in the current context. This stack structure also keeps track of the remaining gas for the current call. Other than that, the function merely updates a value on that stack and then serializes an integer into a buffer.
 As a rough estimate. A programmer already familiar with the Substrate codebase could implement the feature in 1-2 days. One who's unfamiliar could take 5-8 days.
