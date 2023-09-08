@@ -1,5 +1,11 @@
 # On ink! integration tests
 
+![https://img.shields.io/badge/license-MIT-green](https://img.shields.io/badge/license-MIT-green)
+
+<p align="center">
+  <img src="/assets/blacksmith_flattening_the_anvil_V1.png" alt="With a properly flattened anvil, quality tools can be built." width="300" center  />
+</p>
+
 We have discovered that integration tests for ink! contracts lack some of the functionalities found in E2E testing.
 
 Integration tests run significantly faster than E2E tests. If a full range of functionalities were provided, it could reduce testing and QA times. 
