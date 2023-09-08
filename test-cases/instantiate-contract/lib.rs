@@ -2,8 +2,7 @@
 
 #[ink::contract]
 mod instantiate_contract {
-    use ink::env::call::ExecutionInput;
-    use ink::env::DefaultEnvironment;
+    use other_contract::OtherContractRef;
 
     #[ink(storage)]
     pub struct InstantiateContract {}
@@ -22,16 +21,23 @@ mod instantiate_contract {
         }
 
         #[ink(message)]
-        pub fn instantiate_other_contract(&self) -> InstantiateContractRef {
-            let my_contract = ink::env::call::build_create::<InstantiateContractRef>()
-                .code_hash(Hash::from([0x42; 32]))
+        pub fn instantiate_other_contract(&self, code_hash: Hash) -> OtherContractRef {
+            // let my_contract = ink::env::call::build_create::<OtherContractRef>()
+            //     .code_hash(Hash::from([0x42; 32]))
+            //     .gas_limit(4000)
+            //     .endowment(total_balance / 4)
+            //     .exec_input(ExecutionInput::new(ink::env::call::Selector::new(
+            //         ink::selector_bytes!("new"),
+            //     )))
+            //     .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
+            //     .returns::<OtherContractRef>()
+            //     .params();
+
+            let my_contract = OtherContractRef::new()
+                .code_hash(code_hash)
                 .gas_limit(4000)
-                .endowment(25)
-                .exec_input(ExecutionInput::new(ink::env::call::Selector::new(
-                    ink::selector_bytes!("constructor"),
-                )))
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
-                .returns::<InstantiateContractRef>()
+                .endowment(0)
+                .salt_bytes([0x0; 4])
                 .params();
 
             self.env()
@@ -54,14 +60,9 @@ mod instantiate_contract {
 
         #[ink::test]
         fn split_profit_precision() {
-            // Given
             let contract = InstantiateContract::new();
 
-            // When
-            let profit = contract.split_profit(33, 100);
-
-            // Then
-            assert_eq!(profit, 0);
+            contract.instantiate_other_contract([0x42; 32].into());
         }
     }
 
@@ -73,12 +74,10 @@ mod instantiate_contract {
 
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-        #[ink_e2e::test]
+        #[ink_e2e::test(additional_contracts = "other_contract/Cargo.toml")]
         async fn split_profit_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
             let constructor = InstantiateContractRef::new();
 
-            // When
             let contract_acc_id = client
                 .instantiate(
                     "instantiate_contract",
@@ -91,16 +90,20 @@ mod instantiate_contract {
                 .expect("instantiate failed")
                 .account_id;
 
-            // Then
+            let other_contract_code_hash = client
+                .upload("other_contract", &ink_e2e::bob(), None)
+                .await
+                .expect("instantiate failed")
+                .code_hash;
+
             let instantiate_other_contract =
                 build_message::<InstantiateContractRef>(contract_acc_id.clone())
-                    .call(|contract| contract.instantiate_other_contract());
-            let instantiate_other_contract_res = client
-                .call(&ink_e2e::bob(), instantiate_other_contract, 0, None)
-                .await
-                .expect("split_profit failed");
+                    .call(|contract| contract.instantiate_other_contract(other_contract_code_hash));
 
-            assert_eq!(split_profit_res.return_value(), 0);
+            let _instantiate_other_contract_res = client
+                .call_dry_run(&ink_e2e::bob(), &instantiate_other_contract, 0, None)
+                .await
+                .return_value();
 
             Ok(())
         }
