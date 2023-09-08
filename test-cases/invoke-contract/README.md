@@ -36,7 +36,6 @@ End-to-End:
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+The function depends on features also required by gas_left(), instantiate_contract(); namely, storage and retrieval of secondary contracts, and gas calculations. The logic is fairly complex, so it's difficult to provide a time estimation. As a very rough estimate, it could be around 1-2 weeks worth of work.
+On-chain implementation at frame/contracts/src/exec.rs:1199-1243
+On-chain implementation at frame/contracts/src/exec.rs:885-1014
