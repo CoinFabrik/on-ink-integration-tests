@@ -36,7 +36,15 @@ End-to-End:
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+Note: The following estimate applies both to code_hash() and to own_code_hash(), as the two functions are very similar.
+
+This function requires accounts and contract instantiation to be implemented. After that's done, there are two main methods to implement this functionality:
+1. Hash some property of the specified contract. For example, the address of the constructor.
+2. Implement the code hash equivalently to how it's done on E2E.
+
+Option #1 is fairly easy to implement; it can be done in less than a week. However, it can only support comparing hashes returned by either own_code_hash() or code_hash(), not if the caller specifies a hash directly. E.g.
+```
+if code_hash(foo) == "0xf00..."{
+}
+```
+Option #2 supports both use cases, but it's more complex to implement and also slows down integration tests by requiring the full WASM compilation of the contract.
