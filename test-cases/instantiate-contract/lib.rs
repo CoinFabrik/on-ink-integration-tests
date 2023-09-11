@@ -67,7 +67,7 @@ mod instantiate_contract {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test(additional_contracts = "other_contract/Cargo.toml")]
-        async fn split_profit_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn instantiate_other_contract(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let constructor = InstantiateContractRef::new();
 
             let contract_acc_id = client
@@ -92,10 +92,11 @@ mod instantiate_contract {
                 build_message::<InstantiateContractRef>(contract_acc_id.clone())
                     .call(|contract| contract.instantiate_other_contract(other_contract_code_hash));
 
-            let _instantiate_other_contract_res = client
+            let instantiate_other_contract_res = client
                 .call_dry_run(&ink_e2e::bob(), &instantiate_other_contract, 0, None)
-                .await
-                .return_value();
+                .await;
+
+            assert!(instantiate_other_contract_res.exec_result.result.is_ok());
 
             Ok(())
         }
