@@ -1,4 +1,4 @@
-# Template
+# Function `instantiate_contract`
 
 ```rust
 pub fn instantiate_contract<E, ContractRef, Args, Salt, R>(
