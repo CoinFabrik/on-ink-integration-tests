@@ -34,7 +34,4 @@ The End-to-End test works correctly since it invokes successfully the call to th
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+The implementation of invoke_contract() is somewhat tied to that of code_hash and own_code_hash(). The strategy picked for one will condition the solution for the other. The simpler of the two may take up to roughly 15 days. There are some things to work out, such as how to call the required function, that add some uncertainty to the estimate.
