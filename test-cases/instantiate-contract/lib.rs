@@ -51,7 +51,7 @@ mod instantiate_contract {
         use super::*;
 
         #[ink::test]
-        fn split_profit_precision() {
+        fn instantiate_other_contract() {
             let contract = InstantiateContract::new();
             let code_hash = Hash::from([0x42; 32]);
             let _ = contract.instantiate_other_contract(code_hash);
