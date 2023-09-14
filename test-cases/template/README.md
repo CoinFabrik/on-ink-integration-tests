@@ -1,4 +1,4 @@
-# Template
+# Function `name_function`
 
 ## Description
 
@@ -11,6 +11,10 @@ Minimum description of tested functionality.
 ## Test case
 
 How the test cases actually tests the given functionality.
+
+| \#  | Test            | Integration | E2E |
+| --- | --------------- | :---------: | :-: |
+| 1   | Attempts to ... |     ❌      | ✅  |
 
 ## Comparison Integration vs E2E
 

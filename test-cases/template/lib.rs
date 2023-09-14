@@ -20,19 +20,30 @@ mod template {
         }
     }
 
+    /*
+
+    When writing tests, include comments when necessary to ensure that the code
+    remains self-explanatory and easy to comprehend.
+
+    Consider using "given/when/then" constructs where appropriate.
+
+    Example: https://github.com/paritytech/ink/blob/master/integration-tests/contract-transfer/lib.rs
+
+    */
+
     #[cfg(test)]
     mod tests {
         use super::*;
 
         #[ink::test]
-        fn split_profit_precision() {
-            // Given
+        fn split_profit_works() {
+            // given
             let contract = Template::new();
 
-            // When
+            // when
             let profit = contract.split_profit(33, 100);
 
-            // Then
+            // then
             assert_eq!(profit, 0);
         }
     }
@@ -46,18 +57,18 @@ mod template {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn split_profit_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
+        async fn split_profit_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // given
             let constructor = TemplateRef::new();
 
-            // When
+            // when
             let contract_acc_id = client
                 .instantiate("template", &ink_e2e::bob(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
 
-            // Then
+            // then
             let split_profit = build_message::<TemplateRef>(contract_acc_id.clone())
                 .call(|contract| contract.split_profit(33, 100));
             let split_profit_res = client
