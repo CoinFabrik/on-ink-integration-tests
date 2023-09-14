@@ -28,12 +28,15 @@ mod caller {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use ink::env::{test::set_caller, DefaultEnvironment};
 
         #[ink::test]
         fn get_caller() {
+            let caller_id = AccountId::from([0x01; 32]);
+            set_caller::<DefaultEnvironment>(caller_id);
             let contract = Caller::new();
             let caller = contract.caller();
-            assert_eq!(caller, AccountId::from([0x01; 32]));
+            assert_eq!(caller, caller_id);
         }
     }
 

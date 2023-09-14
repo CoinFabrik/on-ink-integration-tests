@@ -1,9 +1,9 @@
 # Function `caller`
 
 ```rust
-pub fn caller<E>() -> E::AccountId
-where
-    E: Environment,
+impl Caller {
+    #[ink(message)]
+    pub fn caller(&self) -> AccountId {
 ```
 
 ## Description
@@ -25,7 +25,7 @@ let caller_id = contract.caller();
 
 ## Comparison Integration vs E2E
 
-Both the integration and end-to-end tests work as expected. The default contract caller in integration tests is the Alice account, which works correctly. And in the end-to-end test, the Bob account is used to call the contract, which also returns the correct caller's account ID.
+Both the integration and end-to-end tests work as expected. In the integration tests, the contract caller can be set using the `set_caller` function, after that we ensure that the actual contract was called with this id. In the end-to-end test, the Bob account is used to call the contract, which also returns the correct caller's account ID.
 
 | \#  | Test                                                  | Integration | E2E |
 | --- | ----------------------------------------------------- | :---------: | :-: |
