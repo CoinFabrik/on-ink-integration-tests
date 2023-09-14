@@ -32,3 +32,5 @@ Both the integration and end-to-end tests work as expected. In the integration t
 | 1   | Attempts to get the account id of the contract caller |     ✅      | ✅  |
 
 ## Result
+
+This functionality is correctly implemented in both integration and end-to-end scenarios.
