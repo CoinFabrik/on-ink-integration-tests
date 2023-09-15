@@ -30,10 +30,17 @@ mod block_number {
         use ink::env::{test::advance_block, DefaultEnvironment};
         #[ink::test]
         fn get_block_number() {
+            // Given
             let get_block_number = GetBlockNumber::new();
-            assert_eq!(get_block_number.get_block_number(), 0);
+
+            // When
+            let first_block_number = get_block_number.get_block_number();
             advance_block::<DefaultEnvironment>();
-            assert_eq!(get_block_number.get_block_number(), 1);
+            let second_block_number = get_block_number.get_block_number();
+
+            // Then
+            assert_eq!(first_block_number, 0);
+            assert_eq!(second_block_number, 1);
         }
     }
 
