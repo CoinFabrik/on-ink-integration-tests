@@ -23,9 +23,8 @@ let balance = contract.get_balance();
 
 ## Comparison Integration vs E2E
 
-The integration tests allow for setting and verifying the contract's balance using the set_account_balance function.
+The integration tests allow for setting and verifying the contract's balance using the `set_account_balance` function. In these tests, the balance is set directly to the specified amount. However, in the end-to-end tests, despite initializing the contract with a balance of `50`, there's an observed additional default balance. As a result, the contract starts with an unexpected total initial balance of `1000000050`. The reason for this default balance is currently unknown.
 
-In the e2e tests, the ink_e2e crate is utilized to perform end-to-end testing. The test initializes a contract instance with a specific balance. It then verifies the get_balance function by calling the contract and checking if the returned balance is as expected, taking into account any balance added during the call.
 
 | \#  | Test                                                    | Integration | E2E |
 | --- | ------------------------------------------------------- | :---------: | :-: |
