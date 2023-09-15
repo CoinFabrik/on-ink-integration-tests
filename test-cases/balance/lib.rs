@@ -53,10 +53,9 @@ mod get_balance {
 
         #[ink_e2e::test]
         async fn get_balance(mut client: Client<C, E>) -> E2EResult<()> {
+            // Given
             let constructor = GetBalanceRef::new();
-
             let initial_balance = 50;
-
             let contract_to_call_acc_id = client
                 .instantiate(
                     "get_balance",
@@ -74,6 +73,7 @@ mod get_balance {
                 .await
                 .expect("Failed to get account balance");
 
+            // When
             let balance_to_pay = 10;
             let call = build_message::<GetBalanceRef>(contract_to_call_acc_id)
                 .call(|contract| contract.get_balance());
@@ -82,6 +82,7 @@ mod get_balance {
                 .await
                 .expect("call failed");
 
+            // Then
             assert_eq!(
                 call_res.return_value(),
                 contract_balance_before + balance_to_pay
