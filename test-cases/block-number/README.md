@@ -1,16 +1,13 @@
 # Function `get_block_number`
 
-## Description
-
-The `get_block_number` function provides a mechanism to retrieve the current block number from the blockchain environment. By leveraging the ink! environment's `block_number` function, it allows smart contracts to be aware of their current block context.
-
 ```rust
 pub fn block_number<E>() -> E::BlockNumber
 ```
 
-and each address holds different amounts of value. There are in total 6 test default accounts ("A" to "F").
+## Description
 
-On End-to-End there's no such implementation but an [`ink_e2e::AccountKeyring`](https://paritytech.github.io/ink/ink_e2e/enum.AccountKeyring.html) `enum` type which provides the default test accounts. There are in total 8 test default accounts ("A" to "F" and two more extra).
+The `get_block_number` function provides a mechanism to retrieve the current block number from the blockchain environment. By leveraging the ink! environment's `block_number` function, it allows smart contracts to be aware of their current block context.
+
 
 ## Related ink! functions and types
 
@@ -18,16 +15,17 @@ On End-to-End there's no such implementation but an [`ink_e2e::AccountKeyring`](
 
 ## Test case
 
-The primary function of the contract, `get_block_number`, retrieves the current block number. In the provided tests, this functionality is verified by advancing the block and ensuring the block number increments as expected.
+The primary function of the contract, `get_block_number`, retrieves the current block number. In the provided integration tests, this functionality is verified by advancing the block and ensuring the block number increments as expected. In the end-to-end tests, the block number increments upon contract instantiation and further contract calls.
+
+## Comparison Integration vs E2E
+
+In the integration test environment, simply advancing the block increments the block number. For instance, when the block is advanced, the block number changes from `0` to `1`.
+
+However, in the end-to-end test environment, there's a noticeable difference. Instantiating the contract and making subsequent calls to it creates new blocks, resulting in an incremented block number for each call. Specifically, after instantiating the contract, the block number is `1`. A subsequent call to retrieve the block number results in a block number of `2`.
 
 | \#  | Test                                                            | Integration | E2E |
 | --- | --------------------------------------------------------------- | :---------: | :-: |
 | 1   | Retrieval of the current and subsequent block number.           |     ✅      | ✅  |
-
-
-## Comparison Integration vs E2E
-
-Both the integration test and the end-to-end test aim to validate the correct retrieval of the block number. The integration test advances the block within a controlled environment, while the end-to-end test interacts with the contract in a simulated real-world scenario, invoking the get_block_number method and verifying its output.
 
 ## Result
 
