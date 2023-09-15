@@ -36,8 +36,10 @@ mod get_balance {
             set_callee::<DefaultEnvironment>(callee_id);
             set_account_balance::<DefaultEnvironment>(callee_id, initial_balance);
             let contract = GetBalance::new();
+
             // When
             let balance = contract.get_balance();
+
             // Then
             assert_eq!(balance, initial_balance);
         }
