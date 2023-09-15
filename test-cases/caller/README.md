@@ -25,7 +25,7 @@ let caller_id = contract.caller();
 
 ## Comparison Integration vs E2E
 
-Both the integration and end-to-end tests work as expected. In the integration tests, the contract caller can be set using the `set_caller` function, after that we ensure that the actual contract was called with this id. In the end-to-end test, the Bob account is used to call the contract, which also returns the correct caller's account ID.
+Both the integration and end-to-end tests work as expected. Notably, the caller in the integration test has been updated to match the e2e test caller. Specifically, both tests now use the ink_e2e::AccountKeyring::Bob as the caller, showcasing that in both integration and e2e environments, the self.env().caller() function performs consistently and returns the same result. In the integration tests, the contract caller can be set using the `set_caller` function, after that we ensure that the actual contract was called with this id. In the end-to-end test, the Bob account is used to call the contract, which also returns the correct caller's account ID.
 
 | \#  | Test                                                  | Integration | E2E |
 | --- | ----------------------------------------------------- | :---------: | :-: |

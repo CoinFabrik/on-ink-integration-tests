@@ -32,11 +32,16 @@ mod caller {
 
         #[ink::test]
         fn get_caller() {
-            let caller_id = AccountId::from([0x01; 32]);
-            set_caller::<DefaultEnvironment>(caller_id);
+            // Given
+            let e2e_bob_account_id: AccountId = ink_e2e::AccountKeyring::Bob.to_raw_public().into();
+            set_caller::<DefaultEnvironment>(e2e_bob_account_id);
             let contract = Caller::new();
+
+            // When
             let caller = contract.caller();
-            assert_eq!(caller, caller_id);
+
+            // Then
+            assert_eq!(caller, e2e_bob_account_id);
         }
     }
 
@@ -50,14 +55,15 @@ mod caller {
 
         #[ink_e2e::test]
         async fn get_caller(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // Given
             let constructor = CallerRef::new();
-
             let contract_acc_id = client
                 .instantiate("caller", &ink_e2e::bob(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
 
+            // When
             let caller =
                 build_message::<CallerRef>(contract_acc_id).call(|contract| contract.caller());
 
@@ -69,8 +75,8 @@ mod caller {
 
             let e2e_bob_account_id: AccountId = ink_e2e::AccountKeyring::Bob.to_raw_public().into();
 
+            // Then
             assert_eq!(caller_res, e2e_bob_account_id);
-
             Ok(())
         }
     }
