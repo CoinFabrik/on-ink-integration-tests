@@ -7,7 +7,6 @@ mod block_number {
     pub struct GetBlockNumber {}
 
     impl GetBlockNumber {
-        /// Creates a new Template contract.
         #[ink(constructor)]
         pub fn new() -> Self {
             Self {}
@@ -47,15 +46,15 @@ mod block_number {
 
         #[ink_e2e::test]
         async fn get_block_number(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // Given
             let constructor = GetBlockNumberRef::new();
-
             let contract_to_call_acc_id = client
                 .instantiate("get_block_number", &ink_e2e::alice(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
 
-            // First block
+            // When
             let call = build_message::<GetBlockNumberRef>(contract_to_call_acc_id)
                 .call(|contract| contract.get_block_number());
             let first_block_number = client
@@ -70,6 +69,7 @@ mod block_number {
                 .expect("call failed")
                 .return_value();
 
+            // Then
             assert_eq!(first_block_number, 1);
             assert_eq!(second_block_number, 2);
             Ok(())
