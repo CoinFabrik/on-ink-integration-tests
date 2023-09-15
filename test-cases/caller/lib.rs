@@ -7,7 +7,6 @@ mod caller {
     pub struct Caller {}
 
     impl Caller {
-        /// Creates a new Template contract.
         #[ink(constructor)]
         pub fn new() -> Self {
             Self {}
