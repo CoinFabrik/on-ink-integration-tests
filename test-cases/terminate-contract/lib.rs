@@ -50,7 +50,12 @@ mod terminate_contract {
                 .unwrap_or_else(|err| {
                     panic!("Cannot get caller balance: {:?}", err);
                 });
+            let callee_balance = get_account_balance::<DefaultEnvironment>(callee_account_id)
+                .unwrap_or_else(|err| {
+                    panic!("Cannot get callee balance: {:?}", err);
+                });
             assert_eq!(caller_balance, 100);
+            assert_eq!(callee_balance, 0);
         }
     }
 
@@ -66,20 +71,12 @@ mod terminate_contract {
         async fn terminate_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = TerminateContractRef::new();
-            let initial_caller_balance = client
-                .balance(ink_e2e::AccountKeyring::Bob.to_raw_public().into())
-                .await
-                .expect("balance failed");
 
             let contract_acc_id = client
-                .instantiate("terminate_contract", &ink_e2e::bob(), constructor, 0, None)
+                .instantiate("terminate_contract", &ink_e2e::bob(), constructor, 100, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
-            let initial_callee_balance = client
-                .balance(contract_acc_id)
-                .await
-                .expect("balance failed");
 
             // When
             let terminate_call = build_message::<TerminateContractRef>(contract_acc_id)
@@ -91,20 +88,13 @@ mod terminate_contract {
                 .expect("split_profit failed");
 
             // Then
-            let final_caller_balance = client
-                .balance(ink_e2e::AccountKeyring::Bob.to_raw_public().into())
-                .await
-                .expect("balance failed");
-
-            let final_callee_balance = client
+            let callee_balance = client
                 .balance(contract_acc_id)
                 .await
                 .expect("balance failed");
 
-            println!(
-                "caller balance: {} -> {}",
-                initial_callee_balance, final_caller_balance
-            );
+            assert!(!terminate_call_res.dry_run.is_err());
+            assert_eq!(callee_balance, 0);
             Ok(())
         }
     }
