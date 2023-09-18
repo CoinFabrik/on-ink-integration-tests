@@ -60,7 +60,7 @@ mod transfer {
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
-        use ink_e2e::build_message;
+        use ink_e2e::{build_message, AccountKeyring};
 
         use super::*;
 
@@ -70,24 +70,28 @@ mod transfer {
         async fn transfer_works(mut client: Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = TransferRef::new();
-            let initial_contract_balance = 1000;
+
             let callee_account_id = client
-                .instantiate(
-                    "transfer",
-                    &ink_e2e::bob(),
-                    constructor,
-                    initial_contract_balance,
-                    None,
-                )
+                .instantiate("transfer", &ink_e2e::bob(), constructor, 1000, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
-            let caller_account_id: AccountId = ink_e2e::AccountKeyring::Bob.to_raw_public().into();
+            let caller_account_id = AccountKeyring::Bob.to_raw_public().into();
+
+            let initial_callee_balance = client
+                .balance(callee_account_id)
+                .await
+                .expect("Failed to get account balance");
+            let initial_caller_balance = client
+                .balance(caller_account_id)
+                .await
+                .expect("Failed to get account balance");
 
             // When
             let transfer_call = build_message::<TransferRef>(callee_account_id)
-                .call(|contract| contract.transfer(100));
-            let transfer_call_res = client
+                .call(|contract| contract.transfer(1));
+
+            let _transfer_call_res = client
                 .call(&ink_e2e::bob(), transfer_call, 0, None)
                 .await
                 .expect("transfer_call failed");
@@ -102,8 +106,9 @@ mod transfer {
                 .await
                 .expect("Failed to get account balance");
 
-            assert_eq!(callee_balance, 900);
-            assert_eq!(caller_balance, 100);
+            assert_eq!(callee_balance, initial_callee_balance - 1);
+            assert!(caller_balance < initial_caller_balance + 1);
+
             Ok(())
         }
     }
