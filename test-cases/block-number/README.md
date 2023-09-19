@@ -29,4 +29,4 @@ However, in the end-to-end test environment, there's a noticeable difference. In
 
 ## Result
 
-The `block_number` function provides essential functionality for smart contracts that need to be aware of or operate based on the current block number. This functionality is correctly implemented in bot integration and end-to-end environments.
+The `block_number` function provides essential functionality for smart contracts that need to be aware of or operate based on the current block number. This functionality is correctly implemented in both integration and end-to-end environments.
