@@ -31,6 +31,7 @@ mod terminate_contract {
             test::{get_account_balance, set_account_balance, set_callee, set_caller},
             DefaultEnvironment,
         };
+        use std::panic::catch_unwind;
 
         #[ink::test]
         fn terminate_works() {
@@ -39,21 +40,23 @@ mod terminate_contract {
             let callee_account_id = AccountId::from([0x02; 32]);
             set_caller::<DefaultEnvironment>(caller_account_id);
             set_callee::<DefaultEnvironment>(callee_account_id);
-            let contract = TerminateContract::new();
+            set_account_balance::<DefaultEnvironment>(caller_account_id, 0);
             set_account_balance::<DefaultEnvironment>(callee_account_id, 100);
 
+            let contract = TerminateContract::new();
+
             // When
-            contract.terminate();
+            // Terminate contract panics after termination
+            let result = catch_unwind(|| {
+                contract.terminate();
+            });
 
             // Then
             let caller_balance = get_account_balance::<DefaultEnvironment>(caller_account_id)
-                .unwrap_or_else(|err| {
-                    panic!("Cannot get caller balance: {:?}", err);
-                });
+                .expect("Failed to get caller balance");
             let callee_balance = get_account_balance::<DefaultEnvironment>(callee_account_id)
-                .unwrap_or_else(|err| {
-                    panic!("Cannot get callee balance: {:?}", err);
-                });
+                .expect("Failed to get callee balance");
+            assert!(result.is_err());
             assert_eq!(caller_balance, 100);
             assert_eq!(callee_balance, 0);
         }
@@ -73,7 +76,13 @@ mod terminate_contract {
             let constructor = TerminateContractRef::new();
 
             let contract_acc_id = client
-                .instantiate("terminate_contract", &ink_e2e::bob(), constructor, 100, None)
+                .instantiate(
+                    "terminate_contract",
+                    &ink_e2e::bob(),
+                    constructor,
+                    100,
+                    None,
+                )
                 .await
                 .expect("instantiate failed")
                 .account_id;
