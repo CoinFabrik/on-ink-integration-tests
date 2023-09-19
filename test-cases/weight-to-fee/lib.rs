@@ -41,10 +41,6 @@ mod weight_to_fee {
 
             // Then
             println!("Gas price in Integration: {:?}", gas_price);
-            println!(
-                "Gas price per unit in Integration: {:?}",
-                gas_price / <u64 as Into<u128>>::into(_GAS_AMOUNT)
-            );
         }
     }
 
@@ -67,21 +63,16 @@ mod weight_to_fee {
                 .account_id;
 
             // When
-            let weight_to_fee = build_message::<WeightToFeeRef>(contract_acc_id.clone())
+            let weight_to_fee_call = build_message::<WeightToFeeRef>(contract_acc_id.clone())
                 .call(|contract| contract.weight_to_fee(_GAS_AMOUNT));
 
-            let gas_price = client
-                .call(&ink_e2e::bob(), weight_to_fee, 0, None)
+            let weight_to_fee_res = client
+                .call(&ink_e2e::bob(), weight_to_fee_call, 0, None)
                 .await
-                .expect("split_profit failed")
-                .return_value();
+                .expect("weight-to-fee failed");
 
             // Then
-            println!("Gas price in E2E: {:?}", gas_price);
-            println!(
-                "Gas price per unit in E2E: {:?}",
-                gas_price / <u64 as Into<u128>>::into(_GAS_AMOUNT)
-            );
+            println!("Gas price in E2E: {:?}", weight_to_fee_res.return_value());
 
             Ok(())
         }
