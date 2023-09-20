@@ -6,7 +6,7 @@ pub fn hash_bytes<H>(input: &[u8], output: &mut <H as HashOutput>::Type)
 
 ## Description
 
-The `hash_bytes` module provides functionality to compute the hash of a given byte array using the designated hash function. The method `get_hash_bytes` accepts an array of bytes and returns its hash. This function is essential for cryptographic operations where data integrity and verification are crucial.
+The `hash_bytes` module provides functionality to compute the hash of a given byte array using the designated hash function, this method accepts an array of bytes and returns its hash. This function is essential for cryptographic operations where data integrity and verification are crucial.
 
 ## Related ink! functions
 
