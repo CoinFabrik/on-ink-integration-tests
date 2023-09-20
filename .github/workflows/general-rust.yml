@@ -28,25 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/substrate-contracts-node
-          key: ${{ runner.os }}-test-prepare-${{ github.run_id }}
-
       - name: Create test matrix
         id: create-matrix
         run: |
           echo "matrix=$(python3 scripts/create-test-matrix.py)" >> $GITHUB_OUTPUT
-
-      - name: Download substrate-contracts-node
-        run: |
-          wget https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-linux.tar.gz -P ~/substrate-contracts-node
-          cd ~/substrate-contracts-node
-          tar -xvf substrate-contracts-node-linux.tar.gz
-          mv artifacts/substrate-contracts-node-linux/substrate-contracts-node .
-          rm -rf artifacts substrate-contracts-node-linux.tar.gz
 
   test:
     name: Test
@@ -58,16 +43,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/substrate-contracts-node
-          key: ${{ runner.os }}-test-prepare-${{ github.run_id }}
+      - name: Download substrate-contracts-node
+        run: |
+          wget https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-linux.tar.gz -P ~/substrate-contracts-node
+          cd ~/substrate-contracts-node
+          tar -xvf substrate-contracts-node-linux.tar.gz
 
       - name: Run test
         env:
-          CONTRACTS_NODE: ~/substrate-contracts-node/substrate-contracts-node
+          CONTRACTS_NODE: ~/substrate-contracts-node/artifacts/substrate-contracts-node-linux/substrate-contracts-node
         run: |
           cd test-cases/${{ matrix.test }}
           cargo test --all --all-features
