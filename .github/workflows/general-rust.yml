@@ -17,14 +17,57 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Update Rust
-        run: rustup update
-
-      - name: Install Rust
-        run: rustup install 1.69 --profile minimal
-
-      - name: Install Rustfmt
-        run: rustup component add rustfmt --toolchain 1.69-x86_64-unknown-linux-gnu
-
       - name: Run cargo fmt
         run: make fmt-rust-check
+
+  test-prepare:
+    name: Prepare tests
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/substrate-contracts-node
+          key: ${{ runner.os }}-test-prepare-${{ github.run_id }}
+
+      - name: Create test matrix
+        id: create-matrix
+        run: |
+          echo "matrix=$(python3 scripts/create-test-matrix.py)" >> $GITHUB_OUTPUT
+
+      - name: Download substrate-contracts-node
+        run: |
+          wget https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-linux.tar.gz -P ~/substrate-contracts-node
+          cd ~/substrate-contracts-node
+          tar -xvf substrate-contracts-node-linux.tar.gz
+          mv artifacts/substrate-contracts-node-linux/substrate-contracts-node .
+          rm -rf artifacts substrate-contracts-node-linux.tar.gz
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: test-prepare
+    strategy:
+      matrix:
+        test: ${{ fromJson(needs.test-prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/substrate-contracts-node
+          key: ${{ runner.os }}-test-prepare-${{ github.run_id }}
+
+      - name: Run test
+        env:
+          CONTRACTS_NODE: ~/substrate-contracts-node/substrate-contracts-node
+        run: |
+          cd test-cases/${{ matrix.test }}
+          cargo test --all --all-features
