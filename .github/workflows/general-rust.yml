@@ -49,13 +49,13 @@ jobs:
 
       - name: Download substrate-contracts-node
         run: |
-          wget https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-linux.tar.gz -P ~/substrate-contracts-node
-          cd ~/substrate-contracts-node
-          tar -xvf substrate-contracts-node-linux.tar.gz
+          wget https://github.com/paritytech/substrate-contracts-node/releases/latest/download/substrate-contracts-node-linux.tar.gz -P $HOME/substrate-contracts-node
+          tar -xvf $HOME/substrate-contracts-node/substrate-contracts-node-linux.tar.gz -C $HOME/substrate-contracts-node
+          mkdir -p $HOME/.local/bin
+          cp $HOME/substrate-contracts-node/artifacts/substrate-contracts-node-linux/substrate-contracts-node $HOME/.local/bin
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run test
-        env:
-          CONTRACTS_NODE: $HOME/substrate-contracts-node/artifacts/substrate-contracts-node-linux/substrate-contracts-node
         run: |
           cd test-cases/${{ matrix.test }}
           cargo test --all --all-features
