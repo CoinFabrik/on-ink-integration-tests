@@ -38,7 +38,9 @@ mod own_code_hash {
         use super::*;
 
         #[ink::test]
-        #[should_panic(expected = "not implemented: off-chain environment does not support `own_code_hash`")]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support `own_code_hash`"
+        )]
         fn get_own_code_hash() {
             let own_code_hash = OwnCodeHash::new();
 
