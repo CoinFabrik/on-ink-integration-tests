@@ -3,9 +3,17 @@
 #[ink::contract]
 mod hash_encoded {
     use ink::env::hash::{Blake2x128, Blake2x256, Keccak256, Sha2x256};
+    use ink::prelude::string::String;
+    use scale::Encode;
 
     #[ink(storage)]
     pub struct HashEncoded {}
+
+    #[derive(Encode)]
+    struct Account {
+        name: String,
+        age: u32,
+    }
 
     impl HashEncoded {
         #[ink(constructor)]
@@ -14,23 +22,27 @@ mod hash_encoded {
         }
 
         #[ink(message)]
-        pub fn hash_sha_256(&self, input: [u8; 32]) -> [u8; 32] {
-            self.env().hash_encoded::<Sha2x256, [u8; 32]>(&input)
+        pub fn hash_sha_256(&self, name: String, age: u32) -> [u8; 32] {
+            let test_data = Account { name, age };
+            self.env().hash_encoded::<Sha2x256, Account>(&test_data)
         }
 
         #[ink(message)]
-        pub fn hash_blake_128(&self, input: [u8; 32]) -> [u8; 16] {
-            self.env().hash_encoded::<Blake2x128, [u8; 32]>(&input)
+        pub fn hash_blake_128(&self, name: String, age: u32) -> [u8; 16] {
+            let test_data = Account { name, age };
+            self.env().hash_encoded::<Blake2x128, Account>(&test_data)
         }
 
         #[ink(message)]
-        pub fn hash_blake_256(&self, input: [u8; 32]) -> [u8; 32] {
-            self.env().hash_encoded::<Blake2x256, [u8; 32]>(&input)
+        pub fn hash_blake_256(&self, name: String, age: u32) -> [u8; 32] {
+            let test_data = Account { name, age };
+            self.env().hash_encoded::<Blake2x256, Account>(&test_data)
         }
 
         #[ink(message)]
-        pub fn hash_keccak_256(&self, input: [u8; 32]) -> [u8; 32] {
-            self.env().hash_encoded::<Keccak256, [u8; 32]>(&input)
+        pub fn hash_keccak_256(&self, name: String, age: u32) -> [u8; 32] {
+            let test_data = Account { name, age };
+            self.env().hash_encoded::<Keccak256, Account>(&test_data)
         }
     }
 
@@ -41,25 +53,27 @@ mod hash_encoded {
     }
 
     #[cfg(test)]
-    const HASH_INPUT: [u8; 32] = [0x01; 32];
+    const NAME: &str = "CoinFabrik";
+    #[cfg(test)]
+    const AGE: u32 = 9;
     #[cfg(test)]
     const EXPECTED_SHA256_OUTPUT: [u8; 32] = [
-        114, 205, 110, 132, 34, 196, 7, 251, 109, 9, 134, 144, 241, 19, 11, 125, 237, 126, 194,
-        247, 245, 225, 211, 11, 217, 213, 33, 240, 21, 54, 55, 147,
+        17, 16, 147, 141, 78, 60, 123, 76, 255, 208, 54, 80, 16, 12, 80, 246, 152, 244, 48, 8, 29,
+        113, 30, 77, 0, 83, 184, 145, 18, 147, 10, 142,
     ];
     #[cfg(test)]
     const EXPECTED_BLAKE128_OUTPUT: [u8; 16] = [
-        192, 53, 248, 83, 252, 208, 240, 88, 158, 48, 201, 226, 220, 26, 15, 87,
+        147, 117, 200, 111, 255, 7, 223, 69, 213, 16, 102, 228, 232, 103, 228, 229,
     ];
     #[cfg(test)]
     const EXPECTED_BLAKE256_OUTPUT: [u8; 32] = [
-        244, 12, 234, 248, 110, 87, 118, 146, 51, 50, 184, 216, 253, 59, 239, 132, 156, 173, 177,
-        156, 105, 150, 188, 39, 42, 241, 246, 72, 217, 86, 106, 76,
+        184, 100, 185, 186, 117, 254, 178, 11, 190, 30, 88, 146, 18, 188, 8, 92, 254, 119, 145,
+        231, 167, 58, 249, 208, 107, 6, 130, 38, 226, 45, 144, 25,
     ];
     #[cfg(test)]
     const EXPECTED_KECCAK256_OUTPUT: [u8; 32] = [
-        206, 188, 136, 130, 254, 203, 236, 127, 184, 13, 44, 244, 179, 18, 190, 192, 24, 136, 76,
-        45, 102, 102, 124, 103, 169, 5, 8, 33, 75, 216, 186, 252,
+        63, 29, 47, 151, 56, 88, 65, 75, 141, 236, 242, 218, 220, 140, 220, 136, 251, 23, 244, 122,
+        193, 38, 195, 250, 246, 213, 204, 178, 227, 88, 242, 175,
     ];
 
     #[cfg(test)]
@@ -72,7 +86,7 @@ mod hash_encoded {
             let contract = HashEncoded::new();
 
             // When
-            let hash_encoded = contract.hash_sha_256(HASH_INPUT);
+            let hash_encoded = contract.hash_sha_256(String::from(NAME), AGE);
 
             // Then
             assert_eq!(hash_encoded, EXPECTED_SHA256_OUTPUT);
@@ -84,7 +98,7 @@ mod hash_encoded {
             let contract = HashEncoded::new();
 
             // When
-            let hash_encoded = contract.hash_blake_128(HASH_INPUT);
+            let hash_encoded = contract.hash_blake_128(String::from(NAME), AGE);
 
             // Then
             assert_eq!(hash_encoded, EXPECTED_BLAKE128_OUTPUT);
@@ -96,7 +110,7 @@ mod hash_encoded {
             let contract = HashEncoded::new();
 
             // When
-            let hash_encoded = contract.hash_blake_256(HASH_INPUT);
+            let hash_encoded = contract.hash_blake_256(String::from(NAME), AGE);
 
             // Then
             assert_eq!(hash_encoded, EXPECTED_BLAKE256_OUTPUT);
@@ -108,7 +122,7 @@ mod hash_encoded {
             let contract = HashEncoded::new();
 
             // When
-            let hash_encoded = contract.hash_keccak_256(HASH_INPUT);
+            let hash_encoded = contract.hash_keccak_256(String::from(NAME), AGE);
 
             // Then
             assert_eq!(hash_encoded, EXPECTED_KECCAK256_OUTPUT);
@@ -136,7 +150,7 @@ mod hash_encoded {
 
             // When
             let hash_encoded_call = build_message::<HashEncodedRef>(contract_acc_id)
-                .call(|contract| contract.hash_sha_256(HASH_INPUT));
+                .call(|contract| contract.hash_sha_256(String::from(NAME), AGE));
             let hash_encoded_res = client
                 .call(&ink_e2e::bob(), hash_encoded_call, 0, None)
                 .await
@@ -161,7 +175,7 @@ mod hash_encoded {
 
             // When
             let hash_encoded_call = build_message::<HashEncodedRef>(contract_acc_id)
-                .call(|contract| contract.hash_blake_128(HASH_INPUT));
+                .call(|contract| contract.hash_blake_128(String::from(NAME), AGE));
             let hash_encoded_res = client
                 .call(&ink_e2e::bob(), hash_encoded_call, 0, None)
                 .await
@@ -186,7 +200,7 @@ mod hash_encoded {
 
             // When
             let hash_encoded_call = build_message::<HashEncodedRef>(contract_acc_id)
-                .call(|contract| contract.hash_blake_256(HASH_INPUT));
+                .call(|contract| contract.hash_blake_256(String::from(NAME), AGE));
             let hash_encoded_res = client
                 .call(&ink_e2e::bob(), hash_encoded_call, 0, None)
                 .await
@@ -211,7 +225,7 @@ mod hash_encoded {
 
             // When
             let hash_encoded_call = build_message::<HashEncodedRef>(contract_acc_id)
-                .call(|contract| contract.hash_keccak_256(HASH_INPUT));
+                .call(|contract| contract.hash_keccak_256(String::from(NAME), AGE));
             let hash_encoded_res = client
                 .call(&ink_e2e::bob(), hash_encoded_call, 0, None)
                 .await
