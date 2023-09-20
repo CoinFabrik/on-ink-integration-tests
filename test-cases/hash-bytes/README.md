@@ -18,7 +18,7 @@ Both the integration tests and end-to-end tests in the `hash_bytes` module verif
 
 ## Comparison Integration vs E2E
 
-The function `get_hash_bytes` has been successfully validated in both integration and end-to-end test scenarios, demonstrating its robustness and consistent implementation.
+The function `hash_bytes` has been successfully validated in both integration and end-to-end test scenarios, demonstrating its robustness and consistent implementation.
 
 | #   | Test                                                   | Integration | E2E |
 | --- | ------------------------------------------------------ | :---------: | :-: |
