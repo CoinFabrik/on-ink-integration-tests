@@ -15,19 +15,22 @@ This function never returns. Either the termination was successful, and the exec
 
 ## Test case
 
-The integration test verifies the termination functionality of the contract. Based on the test results, it seems that there might be an issue with the integration of the terminate method, as it did not execute as expected during the test. The end-to-end test has passed successfully, indicating that the terminate method functions correctly in a full environment.
+The integration test and end-to-end test both verify the termination functionality of the contract. Both tests ensure that after the terminate_contract function is called, the contract's balance is transferred to the caller and the contract's execution is terminated. Both tests passed successfully, demonstrating the correct functionality of the terminate_contract method.
 
 ## Comparison Integration vs E2E
 
-The integration test for the terminate method failed during execution, while the end-to-end test passed successfully.
+Both the integration test and the end-to-end test for the terminate method passed successfully. However, it's worth noting that during the execution of the integration test, a Rust panic is observed:
+
+```rust
+thread 'terminate_contract::tests::terminate_works' panicked at 'Box<dyn Any>'
+```
+
+This panic is expected behaviour and enables both testing for the proper result and makes sure this method returns `Never`.
 
 | \#  | Test                                         | Integration | E2E |
 | --- | -------------------------------------------- | :---------: | :-: |
-| 1   | Attempts to terminate the executing contract |     ❌      | ✅  |
+| 1   | Attempts to terminate the executing contract |     ✅      | ✅  |
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+- This functionality is implemented in both environments and works as expected.
