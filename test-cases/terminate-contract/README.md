@@ -15,7 +15,7 @@ This function never returns. Either the termination was successful, and the exec
 
 ## Test case
 
-The integration test and end-to-end test both verify the termination functionality of the contract. Both tests ensure that after the terminate_contract function is called, the contract's balance is transferred to the caller and the contract's execution is terminated. Both tests passed successfully, demonstrating the correct functionality of the terminate_contract method.
+The integration test and end-to-end test both verify the termination functionality of the contract. Both tests ensure that after the `terminate_contract` function is called, the contract's balance is transferred to the caller and the contract's execution is terminated. Both tests passed successfully, demonstrating the correct functionality of the `terminate_contract` method.
 
 ## Comparison Integration vs E2E
 
