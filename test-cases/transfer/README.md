@@ -27,9 +27,9 @@ This test showcases the process of instantiating the contract and requesting a b
 
 Ensuring the reliability and security of balance transfers is crucial. As such, rigorous testing is performed on both integration and end-to-end levels:
 
-- Integration Tests: These tests focus on the contract's internal logic, verifying that the `transfer` function behaves as expected under various conditions.
+- Integration Tests: In the integration test `transfer_works`, a testing environment is set up with a specific account balance. The `transfer` function is then invoked to transfer a specified value from the contract's balance to the caller. After the transfer, the test asserts that the balances of the accounts have changed as expected.
 
-- E2E Tests: In end-to-end tests, the exact balance of the smart contract after the `transfer` is known. However, when a user or another contract calls the `transfer` function, they pay a gas fee. The exact gas required isn't known in advance. For this reason, we initiate a transaction with a value of `1` and then assert that the resulting balance is less than the initial balance due to the gas fee.
+- E2E Tests: In the end-to-end test `transfer_works`, the contract is set up with a given balance. The `transfer` function is then called to transfer a value of `1` to the caller. The test then verifies that the contract's balance has decreased by the transferred amount.
 
 | \#  | Test                                  | Integration | E2E |
 | --- | ------------------------------------- | :---------: | :-: |
