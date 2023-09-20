@@ -55,7 +55,7 @@ jobs:
 
       - name: Run test
         env:
-          CONTRACTS_NODE: ~/substrate-contracts-node/artifacts/substrate-contracts-node-linux/substrate-contracts-node
+          CONTRACTS_NODE: $HOME/substrate-contracts-node/artifacts/substrate-contracts-node-linux/substrate-contracts-node
         run: |
           cd test-cases/${{ matrix.test }}
           cargo test --all --all-features
