@@ -14,15 +14,18 @@ The `hash_bytes` module provides functionality to compute the hash of a given by
 
 ## Test case
 
-Both test cases instantiate the `HashBytes` contract and attempt to compute the hash of a given byte array. The tests then validate the result based on the expected hash length, ensuring the correctness of the hash computation.
+Both the integration tests and end-to-end tests in the `hash_bytes` module verify the hashing functionality of the contract. Each test ensures that the corresponding hash function produces the expected hash output for a given input.
 
 ## Comparison Integration vs E2E
 
 The function `get_hash_bytes` has been successfully validated in both integration and end-to-end test scenarios, demonstrating its robustness and consistent implementation.
 
-| \#  | Test                                              | Integration | E2E |
-| --- | ------------------------------------------------- | :---------: | :-: |
-| 1   | Attempts to retrieve the code hash given an input |     ✅      | ✅  |
+| #   | Test                                                   | Integration | E2E |
+| --- | ------------------------------------------------------ | :---------: | :-: |
+| 1   | Attempts to get the hash using the method `sha_256`    |     ✅      | ✅  |
+| 2   | Attempts to get the hash using the method `blake_128`  |     ✅      | ✅  |
+| 3   | Attempts to get the hash using the method `blake_256`  |     ✅      | ✅  |
+| 4   | Attempts to get the hash using the method `keccak_256` |     ✅      | ✅  |
 
 ## Result
 
