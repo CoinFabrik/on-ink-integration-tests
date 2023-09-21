@@ -84,6 +84,7 @@ mod runtime_call {
         ///  - after the transfer, `receiver` doesn't have at least existential deposit
         ///  - the contract doesn't have enough balance
         #[ink(message)]
+
         pub fn transfer_through_runtime(
             &mut self,
             receiver: AccountId,
@@ -107,7 +108,11 @@ mod runtime_call {
     mod tests {
         use crate::runtime_call::*;
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support `call_runtime`"
+        )]
         fn test_call_runtime() {
             let mut contract = RuntimeCaller::new();
             let alice = AccountId::from([1u8; 32]);
