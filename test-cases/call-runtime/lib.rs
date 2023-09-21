@@ -84,7 +84,6 @@ mod runtime_call {
         ///  - after the transfer, `receiver` doesn't have at least existential deposit
         ///  - the contract doesn't have enough balance
         #[ink(message)]
-
         pub fn transfer_through_runtime(
             &mut self,
             receiver: AccountId,
