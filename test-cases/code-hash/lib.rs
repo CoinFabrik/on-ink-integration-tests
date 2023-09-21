@@ -35,14 +35,22 @@ mod code_hash {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support `code_hash`"
+        )]
         fn get_own_code_hash() {
             let contract = CodeHash::new();
 
             contract.get_own_code_hash();
         }
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support `code_hash`"
+        )]
         fn get_other_code_hash() {
             let contract = CodeHash::new();
 
