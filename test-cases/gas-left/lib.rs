@@ -28,6 +28,8 @@ mod gas_left {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration test
+        // environment is improved.
         #[ink::test]
         #[should_panic(
             expected = "not implemented: off-chain environment does not yet support `gas_left`"
