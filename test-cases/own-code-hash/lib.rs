@@ -37,6 +37,7 @@ mod own_code_hash {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
         #[should_panic(
             expected = "not implemented: off-chain environment does not support `own_code_hash`"
