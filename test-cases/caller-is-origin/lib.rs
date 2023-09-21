@@ -52,7 +52,9 @@ mod invoke_contract {
 
         // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
-        #[should_panic(expected = "not implemented: off-chain environment does not support cross-contract calls")]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support cross-contract calls"
+        )]
         fn call_contract_directly() {
             let contract = ContractToCall::new();
             let is_the_origin = contract.im_the_origin();
@@ -61,7 +63,9 @@ mod invoke_contract {
 
         // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
-        #[should_panic(expected = "not implemented: off-chain environment does not support contract invocation")]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support contract invocation"
+        )]
         fn call_contract_indirectly() {
             let contract = InvokeContract::new();
             let other_contract_mock = [0x42; 32];
