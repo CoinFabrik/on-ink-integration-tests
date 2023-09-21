@@ -43,8 +43,9 @@ mod set_contract_storage {
             assert_eq!(0, 0);
         }
 
+        // TODO: This test should panic when ink integration test
+        // environment is improved.
         #[ink::test]
-        #[should_panic]
         fn contract_storage_too_big() {
             let contract = SetContractStorage::new();
 

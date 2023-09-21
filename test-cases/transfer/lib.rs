@@ -49,9 +49,8 @@ mod transfer {
             contract.transfer(100);
 
             // Then
-            let callee_balance =
-                get_account_balance::<DefaultEnvironment>(AccountId::from([0x34; 32]))
-                    .expect("Cannot get account balance");
+            let callee_balance = get_account_balance::<DefaultEnvironment>(callee_account_id)
+                .expect("Cannot get account balance");
             let caller_balance = get_account_balance::<DefaultEnvironment>(caller_account_id)
                 .expect("Cannot get account balance");
             assert_eq!(callee_balance, 900);

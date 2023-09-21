@@ -107,7 +107,11 @@ mod runtime_call {
     mod tests {
         use crate::runtime_call::*;
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support `call_runtime`"
+        )]
         fn test_call_runtime() {
             let mut contract = RuntimeCaller::new();
             let alice = AccountId::from([1u8; 32]);

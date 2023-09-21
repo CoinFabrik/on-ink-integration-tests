@@ -28,7 +28,12 @@ mod gas_left {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration test
+        // environment is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not yet support `gas_left`"
+        )]
         fn get_gas_left() {
             let contract = GasLeft::new();
             assert!(contract.get_gas_left() > 0);

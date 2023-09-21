@@ -51,7 +51,11 @@ mod invoke_contract {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration tests are improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support contract invocation"
+        )]
         fn invoke_contract_works() {
             let contract = InvokeContract::new();
             let other_contract_mock = [0x42; 32];
