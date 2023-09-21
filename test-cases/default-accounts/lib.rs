@@ -29,6 +29,9 @@ mod custom_default_accounts {
         use ink::env::test::DefaultAccounts;
         use ink_e2e;
 
+        // TODO: This tests should be changed to `assert_eq` when ink
+        // integration test environment is improved.
+
         #[ink::test]
         fn test_alice_account() {
             let integration_test_accounts: DefaultAccounts<ink::env::DefaultEnvironment> =
