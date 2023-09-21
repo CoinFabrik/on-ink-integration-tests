@@ -41,7 +41,11 @@ mod invoke_contract_delegate {
     mod tests {
         use super::*;
 
+        // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]
+        #[should_panic(
+            expected = "not implemented: off-chain environment does not support delegated contract invocation"
+        )]
         fn delegate_contract_works() {
             let contract = InvokeContractDelegate::new();
             let code_hash = Hash::from([0x42; 32]);
