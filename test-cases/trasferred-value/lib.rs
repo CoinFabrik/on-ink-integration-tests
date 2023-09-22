@@ -17,15 +17,6 @@ mod transferred_value {
         pub fn send_tokens_and_get_transferred_message(&self) -> Balance {
             self.env().transferred_value()
         }
-
-        #[ink(message, payable)]
-        pub fn was_it_one_hundred(&self) {
-            ink::env::debug_println!("received payment: {}", self.env().transferred_value());
-            assert!(
-                self.env().transferred_value() == 100,
-                "payment was not one hundred"
-            );
-        }
     }
 
     #[cfg(test)]
@@ -38,10 +29,11 @@ mod transferred_value {
         };
 
         use super::*;
+        use ink::codegen::Env;
 
         #[ink::test]
         fn transferred_value() {
-            use ink::codegen::Env;
+            // Given
             let contract = create_contract();
             let accounts = default_accounts::<DefaultEnvironment>();
             let contract_account = contract.env().account_id();
@@ -50,12 +42,14 @@ mod transferred_value {
             set_account_balance::<DefaultEnvironment>(contract_account, 0);
             set_caller::<DefaultEnvironment>(accounts.eve);
 
+            // When
             let res =
                 ink::env::pay_with_call!(contract.send_tokens_and_get_transferred_message(), 1000);
 
             let contract_new_balance = get_balance(contract_account);
             let caller_new_balance = get_balance(accounts.eve);
 
+            // Then
             assert_eq!(caller_new_balance, 0);
             assert_eq!(contract_new_balance, 1000);
             assert_eq!(res, 1000);
@@ -83,19 +77,21 @@ mod transferred_value {
 
         #[ink_e2e::test]
         async fn transferred_value_e2e(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // Given
             let constructor = TransferredValueRef::new();
 
+            // When
             let contract_acc_id = client
-                .instantiate(
-                    "transferred_value",
-                    &ink_e2e::bob(),
-                    constructor,
-                    1337,
-                    None,
-                )
+                .instantiate("transferred_value", &ink_e2e::bob(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
+
+            let bob_account = ink_e2e::account_id(ink_e2e::AccountKeyring::Bob);
+            let caller_balance_before: Balance = client
+                .balance(bob_account)
+                .await
+                .expect("getting balance failed");
 
             let balance_before: Balance = client
                 .balance(contract_acc_id.clone())
@@ -108,15 +104,22 @@ mod transferred_value {
             let call_res = client
                 .call(&ink_e2e::bob(), transfer, 1000, None)
                 .await
-                .expect("set_storage_very_big failed");
+                .expect("transfer failed");
 
             let balance_after: Balance = client
                 .balance(contract_acc_id)
                 .await
                 .expect("getting balance failed");
 
+            let caller_balance_after: Balance = client
+                .balance(bob_account)
+                .await
+                .expect("getting balance failed");
+
+            // Then
             assert_eq!(call_res.return_value(), 1000);
             assert_eq!(balance_after - balance_before, 1000);
+            assert_eq!(caller_balance_before - caller_balance_after, 124415155);
 
             Ok(())
         }
