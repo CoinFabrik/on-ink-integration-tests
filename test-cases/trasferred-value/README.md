@@ -24,7 +24,7 @@ The test sends 1000 tokens to the contract through the function `send_tokens_and
 
 ## Comparison Integration vs E2E
 
-The integration and e2e implementations are slightly different but both work.
+The function works in both e2e and integration test.
 
 ## Result
 
