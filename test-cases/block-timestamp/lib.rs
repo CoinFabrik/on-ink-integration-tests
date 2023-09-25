@@ -26,14 +26,17 @@ mod block_timestamp {
 
         #[ink::test]
         fn split_profit_works() {
+            // Given
             let contract = BlockTimestamp::new();
 
+            // When
             let timestamp = contract.get_block_timestamp();
             advance_block::<DefaultEnvironment>();
 
             let timestamp_2 = contract.get_block_timestamp();
             advance_block::<DefaultEnvironment>();
 
+            // Then
             assert!(timestamp < timestamp_2);
         }
     }
@@ -48,6 +51,7 @@ mod block_timestamp {
 
         #[ink_e2e::test]
         async fn split_profit_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // Given
             let constructor = BlockTimestampRef::new();
 
             let contract_acc_id = client
@@ -56,6 +60,7 @@ mod block_timestamp {
                 .expect("instantiate failed")
                 .account_id;
 
+            // When
             let timestamp = build_message::<BlockTimestampRef>(contract_acc_id.clone())
                 .call(|contract| contract.get_block_timestamp());
 
@@ -69,6 +74,7 @@ mod block_timestamp {
                 .await
                 .expect("block_timestamp failed");
 
+            // Then
             assert!(timestamp_res.return_value() < timestamp_res_2.return_value());
 
             Ok(())
