@@ -29,7 +29,4 @@ The `block_timestamp` function works in both cases. However, in integration test
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+This functionality is implemented and works as expected.

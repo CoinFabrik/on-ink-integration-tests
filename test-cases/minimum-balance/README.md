@@ -28,7 +28,4 @@ The function works in both environments correctly.
 
 ## Result
 
-- Can it be implemented?
-- How long will it take?
-- Ideas for implementation
-- Other notes
+This functionality is implemented and works as expected.
