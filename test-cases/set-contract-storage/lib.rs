@@ -30,6 +30,12 @@ mod set_contract_storage {
         }
     }
 
+    impl Default for SetContractStorage {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
