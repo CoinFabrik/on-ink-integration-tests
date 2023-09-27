@@ -2,10 +2,6 @@
 
 #[ink::contract]
 mod weight_to_fee {
-
-    // Fixed gas amount
-    const _GAS_AMOUNT: u64 = 5000;
-
     #[ink(storage)]
     pub struct WeightToFee {}
 
@@ -28,7 +24,11 @@ mod weight_to_fee {
     }
 
     #[cfg(test)]
+    const GAS_AMOUNT: u64 = 10000000000;
+
+    #[cfg(test)]
     mod tests {
+
         use super::*;
 
         #[ink::test]
@@ -37,10 +37,12 @@ mod weight_to_fee {
             let contract = WeightToFee::new();
 
             // When
-            let gas_price = contract.weight_to_fee(_GAS_AMOUNT);
+            let fee = contract.weight_to_fee(GAS_AMOUNT);
+            let gas_price = fee / GAS_AMOUNT as u128;
+            let expected_gas_price = 100;
 
             // Then
-            println!("Gas price in Integration: {:?}", gas_price);
+            assert_eq!(gas_price, expected_gas_price);
         }
     }
 
@@ -63,8 +65,8 @@ mod weight_to_fee {
                 .account_id;
 
             // When
-            let weight_to_fee_call = build_message::<WeightToFeeRef>(contract_acc_id.clone())
-                .call(|contract| contract.weight_to_fee(_GAS_AMOUNT));
+            let weight_to_fee_call = build_message::<WeightToFeeRef>(contract_acc_id)
+                .call(|contract| contract.weight_to_fee(GAS_AMOUNT));
 
             let weight_to_fee_res = client
                 .call(&ink_e2e::bob(), weight_to_fee_call, 0, None)
