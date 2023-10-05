@@ -2,7 +2,7 @@
 
 #[ink::contract]
 mod instantiate_contract {
-    use other_contract::OtherContractRef;
+    use instantiate_contract_other_contract::OtherContractRef;
 
     #[ink(storage)]
     pub struct InstantiateContract {}

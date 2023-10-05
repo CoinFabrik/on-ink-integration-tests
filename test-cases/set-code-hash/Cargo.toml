@@ -1,5 +1,5 @@
 [package]
-name = "set_code_hash"
+name = "set-code-hash"
 version = "0.1.0"
 authors = ["[your_name] <[your_email]>"]
 edition = "2021"
@@ -18,16 +18,11 @@ ink-as-dependency = []
 e2e-tests = []
 
 [dependencies]
-ink = { version = "4.2.1", default-features = false }
-scale = { package = "parity-scale-codec", version = "=3.6.5", default-features = false, features = ["derive"] }
-scale-info = { version = "2.6", default-features = false, features = ["derive"], optional = true }
-contract_replacement = { path = "contract_replacement", default-features = false, features = ["ink-as-dependency"] }
+ink = { workspace = true }
+scale = { workspace = true, package = "parity-scale-codec" }
+scale-info = { workspace = true, optional = true }
+
+set-code-hash-contract-replacement = { path = "./contract-replacement", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
-ink_e2e = "4.2.1"
-
-[profile.release]
-overflow-checks = false
-
-[profile.dev]
-overflow-checks = false
+ink_e2e = { workspace = true }

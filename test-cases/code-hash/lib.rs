@@ -61,7 +61,7 @@ mod code_hash {
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
         use ink_e2e::build_message;
-        use other_contract::OtherContractRef;
+        use code_hash_other_contract::OtherContractRef;
 
         use super::*;
 

@@ -9,27 +9,23 @@ path = "lib.rs"
 
 [features]
 default = ["std"]
-std = ["ink/std", "scale/std", "scale-info/std", "other_contract/std"]
+std = [
+    "ink/std",
+    "scale/std",
+    "scale-info/std",
+    "instantiate-contract-other-contract/std"
+]
 ink-as-dependency = []
 e2e-tests = []
 
 [dependencies]
-ink = { version = "4.2.1", default-features = false }
-scale = { package = "parity-scale-codec", version = "=3.6.5", default-features = false, features = [
-    "derive",
-] }
-scale-info = { version = "2.6", default-features = false, features = [
-    "derive",
-], optional = true }
-other_contract = { path = "./other_contract", default-features = false, features = [
+ink = { workspace = true }
+scale = { workspace = true, package = "parity-scale-codec" }
+scale-info = { workspace = true, optional = true }
+
+instantiate-contract-other-contract = { path = "./other-contract", default-features = false, features = [
     "ink-as-dependency",
 ] }
 
 [dev-dependencies]
-ink_e2e = "4.2.1"
-
-[profile.dev]
-overflow-checks = false
-
-[profile.release]
-overflow-checks = false
+ink_e2e = { workspace = true }

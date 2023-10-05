@@ -4,6 +4,7 @@
 mod invoke_contract_delegate {
     use ink::env::call::{build_call, ExecutionInput, Selector};
     use ink::env::DefaultEnvironment;
+    
     #[ink(storage)]
     pub struct InvokeContractDelegate {
         value: u128,

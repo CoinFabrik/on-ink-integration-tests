@@ -68,7 +68,7 @@ mod invoke_contract {
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
-        use contract_to_call::ContractToCallRef;
+        use invoke_contract_contract_to_call::ContractToCallRef;
         use ink_e2e::build_message;
 
         use super::*;
@@ -100,7 +100,7 @@ mod invoke_contract {
                 .expect("Account id doesn't exist");
         }
 
-        #[ink_e2e::test(additional_contracts = "./contract_to_call/Cargo.toml")]
+        #[ink_e2e::test(additional_contracts = "./contract-to-call/Cargo.toml")]
         async fn invoke_contract_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             let original_contract_contructor = InvokeContractRef::new();
             let contract_to_call_constructor = ContractToCallRef::new();
