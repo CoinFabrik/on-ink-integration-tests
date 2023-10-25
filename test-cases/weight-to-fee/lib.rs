@@ -27,15 +27,12 @@ mod weight_to_fee {
     const GAS_AMOUNT: u64 = 42;
 
     #[cfg(test)]
-    const EXPECTED: u128 = 100; // as seen in integration tests
-
-    #[cfg(test)]
     mod tests {
 
         use super::*;
 
         #[ink::test]
-        fn integration_weight_to_fee() {
+        fn integration_weight_to_fee_value_1() {
             // Given
             let contract = WeightToFee::new();
 
@@ -43,7 +40,19 @@ mod weight_to_fee {
             let fee = contract.weight_to_fee(GAS_AMOUNT);
 
             // Then
-            assert_eq!(fee.clone(), EXPECTED * GAS_AMOUNT as u128);
+            assert_eq!(fee.clone(), 1 * GAS_AMOUNT as u128);
+        }
+
+        #[ink::test]
+        fn integration_weight_to_fee_value_100() {
+            // Given
+            let contract = WeightToFee::new();
+
+            // When
+            let fee = contract.weight_to_fee(GAS_AMOUNT);
+
+            // Then
+            assert_eq!(fee.clone(), 100 * GAS_AMOUNT as u128);
         }
     }
 
@@ -55,7 +64,7 @@ mod weight_to_fee {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn end_to_end_weigth_to_fee(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn end_to_end_weigth_to_fee_1(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = WeightToFeeRef::new();
 
@@ -79,7 +88,37 @@ mod weight_to_fee {
                 .return_value();
 
             // Then
-            assert_eq!(fee, EXPECTED * GAS_AMOUNT as u128);
+            assert_eq!(fee, 1 * GAS_AMOUNT as u128);
+
+            Ok(())
+        }
+
+        #[ink_e2e::test]
+        async fn end_to_end_weigth_to_fee_100(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+            // Given
+            let constructor = WeightToFeeRef::new();
+
+            let contract_acc_id = client
+                .instantiate("weight-to-fee", &ink_e2e::alice(), constructor, 0, None)
+                .await
+                .expect("instantiate failed")
+                .account_id;
+
+            // When
+            let fee = client
+                .call(
+                    &ink_e2e::bob(),
+                    build_message::<WeightToFeeRef>(contract_acc_id)
+                        .call(|contract| contract.weight_to_fee(GAS_AMOUNT)), // calling weight_to_fee with GAS_AMOUNT
+                    0,
+                    None,
+                )
+                .await
+                .expect("weight-to-fee failed")
+                .return_value();
+
+            // Then
+            assert_eq!(fee, 100 * GAS_AMOUNT as u128);
 
             Ok(())
         }
