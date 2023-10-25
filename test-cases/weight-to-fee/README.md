@@ -38,7 +38,7 @@ Both Integration and E2E environments return a valid gas price (`u128`) for a gi
 
 ## Result
 
-We reviewed that the function `weight_to_fee()` has multiple implementations. It is complex to determine which one of them is resposible for E2E tests because the large size of the runtime makes debugging very slow.
+We reviewed that the function `weight_to_fee()` has multiple implementations. It is complex to determine which one of them is responsible for E2E tests because the large size of the runtime makes debugging very slow.
 
 This incorrect behaviour of `weight_to_fee()` in E2E tests, is also observed in [`paritytech/substrate-contracts-node`](https://github.com/paritytech/substrate-contracts-node).
 
