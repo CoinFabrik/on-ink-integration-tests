@@ -24,7 +24,10 @@ mod weight_to_fee {
     }
 
     #[cfg(test)]
-    const GAS_AMOUNT: u64 = 10000000000;
+    const GAS_AMOUNT: u64 = 42;
+
+    #[cfg(test)]
+    const EXPECTED: u128 = 100; // as seen in integration tests
 
     #[cfg(test)]
     mod tests {
@@ -32,17 +35,15 @@ mod weight_to_fee {
         use super::*;
 
         #[ink::test]
-        fn weight_to_fee_works() {
+        fn integration_weight_to_fee() {
             // Given
             let contract = WeightToFee::new();
 
             // When
             let fee = contract.weight_to_fee(GAS_AMOUNT);
-            let gas_price = fee / GAS_AMOUNT as u128;
-            let expected_gas_price = 100;
 
             // Then
-            assert_eq!(gas_price, expected_gas_price);
+            assert_eq!(fee.clone(), EXPECTED * GAS_AMOUNT as u128);
         }
     }
 
@@ -54,7 +55,7 @@ mod weight_to_fee {
         type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
         #[ink_e2e::test]
-        async fn weight_to_fee_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn end_to_end_weigth_to_fee(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = WeightToFeeRef::new();
 
@@ -65,16 +66,20 @@ mod weight_to_fee {
                 .account_id;
 
             // When
-            let weight_to_fee_call = build_message::<WeightToFeeRef>(contract_acc_id)
-                .call(|contract| contract.weight_to_fee(GAS_AMOUNT));
-
-            let weight_to_fee_res = client
-                .call(&ink_e2e::bob(), weight_to_fee_call, 0, None)
+            let fee = client
+                .call(
+                    &ink_e2e::bob(),
+                    build_message::<WeightToFeeRef>(contract_acc_id)
+                        .call(|contract| contract.weight_to_fee(GAS_AMOUNT)), // calling weight_to_fee with GAS_AMOUNT
+                    0,
+                    None,
+                )
                 .await
-                .expect("weight-to-fee failed");
+                .expect("weight-to-fee failed")
+                .return_value();
 
             // Then
-            println!("Gas price in E2E: {:?}", weight_to_fee_res.return_value());
+            assert_eq!(fee, EXPECTED * GAS_AMOUNT as u128);
 
             Ok(())
         }
