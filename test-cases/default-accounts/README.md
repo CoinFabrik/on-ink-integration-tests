@@ -42,3 +42,12 @@ All default accounts addresses are different. Furthermore, there is a disparity 
 ## Result
 
 This is relatively trivial. It can be implemented in a single day. For backwards compatibility django and frank should retain their current names, and dave and ferdie added as their respective aliases.
+
+## Update on Correcting this Issue
+
+We essentially copied the account setup in e2e tests to integration tests. This implied changing the name of the account Django to Dave and Frank to Ferdie. On the other hand, there were two accounts in e2e that did not exist in integration tests, accounts “one” and “two”, we also added these accounts to integration tests.
+
+On the setup of account addresses, we noticed that these differed between integration and e2e environments because the former addresses were hardcoded and the latter were set through a library called `sp_keyring::sr25519::Keyring`.
+
+In order to ensure that addresses coincide in both environments, we also used this library `sp_keyring::sr25519::Keyring` in the assignment of addresses for integration tests.
+
