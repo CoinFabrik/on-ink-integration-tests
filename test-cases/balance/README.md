@@ -28,4 +28,4 @@ We found that the initial balance differs on both environments.
 ## Result
 
 We need to understand where the initial balance value is created/used in the _integration test environment_ and update 
-its value to the value in _e2e environment_.
+its value to the value in the _e2e environment_.
