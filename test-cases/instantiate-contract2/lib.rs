@@ -46,7 +46,7 @@ mod instantiate_contract {
         }
     }
 
-    #[cfg(test)]
+    #[cfg(all(test, feature = "test_instantiate"))]
     mod tests {
         use super::*;
 
@@ -58,7 +58,7 @@ mod instantiate_contract {
         }
     }
 
-    #[cfg(all(test, feature = "e2e-tests"))]
+    #[cfg(all(test, feature = "e2e-tests", not(feature = "test_instantiate")))]
     mod e2e_tests {
         use ink_e2e::build_message;
 
