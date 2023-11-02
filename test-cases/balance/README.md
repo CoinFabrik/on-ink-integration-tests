@@ -6,7 +6,7 @@ pub fn balance<E>() -> E::Balance
 
 ## Description
 
-The `get_balance` function retrieves the balance of the contract.
+The `balance` function retrieves the balance of the contract.
 
 ## Related ink! functions
 
@@ -14,22 +14,18 @@ The `get_balance` function retrieves the balance of the contract.
 
 ## Test case
 
-The contract possesses a function named get_balance that allows querying the balance of the contract. For example:
-
-```rust
-let contract = GetBalance::new();
-let balance = contract.get_balance();
-```
+We create a contract in a defined address in order to retrieve the account initial balance and compare the results 
+across the environments.
 
 ## Comparison Integration vs E2E
 
-The integration tests allow for setting and verifying the contract's balance using the `set_account_balance` function. In these tests, the balance is set directly to the specified amount. However, in the end-to-end tests, despite initializing the contract with a balance of `50`, there's an observed additional default balance. As a result, the contract starts with an unexpected total initial balance of `1000000050`. The reason for this default balance is currently unknown.
+We found that the initial balance differs on both environments.
 
-
-| \#  | Test                                                    | Integration | E2E |
-| --- | ------------------------------------------------------- | :---------: | :-: |
-| 1   | Attempts to get the balance of the executing contract   |     ✅      | ✅  |
+| \#  | Test                  | Integration |     E2E      | OK |
+| --- |-----------------------|:-----------:|:------------:|:--:|
+| 1   | `get_balance`         |   1000000   | 1000000000   | ❌  |
 
 ## Result
 
-This functionality is implemented and work as expected.
+We need to understand where the initial balance value is created/used in the _integration test environment_ and update 
+its value to the value in the _e2e environment_.
