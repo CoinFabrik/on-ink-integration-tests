@@ -126,3 +126,11 @@ In `polkadot-sdk/substrate/frame/contracts/src/wasm/runtime.rs`, there are 2 fun
 	}
 ```
 Where the first one has a hardcoded zero. Is that intentional as "working as intended", or is that a workaround for something else?
+
+## Next Steps
+
+- Make the gas value in e2e the same as in integration tests
+- Make a setter like `env().setGasPrice(...)` to set the value in the tests (with a default value)
+- Make the gas value an arbitrary X and document it.
+
+Any of this decisions should be properly documented. 
