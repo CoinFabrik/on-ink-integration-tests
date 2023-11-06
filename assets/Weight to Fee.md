@@ -1,4 +1,8 @@
+# Report: `weight_to_fee()`
+
 On our research into integration and end-to-end function implementation differences, we stumbled upon `weight_to_fee()` not working as expected.
+
+Adding to the [test-case and documentation](https://github.com/CoinFabrik/on-ink-integration-tests/tree/main/test-cases/weight-to-fee) we built for analyzing this issue, we explain below the problem, we describe the work we have undertaken to try to identify its source, and propose next steps for resolving it.
 
 ## The problem
 
@@ -67,7 +71,7 @@ The functions that we modified to check if something changed were:
 1)  `polkadot-sdk/substrate/frame/contracts/src/exec.rs`, the `get_weight_price()` function. 
 2) `polkadot-sdk/substrate/frame/transaction-payment/src/lib.rs`, the `convert()` function.
 
-3) `polkadot-sdk/substrate/frame/system/src/limits.rs`, the `max_block: Weight::zero(),` inside the `builder()` function seems to affect at least the`polkadot-sdk/substrate/frame/transaction-payment/src/lib.rs` function `weight_to_fee()`:
+3) `polkadot-sdk/substrate/frame/system/src/limits.rs`, the `max_block: Weight::zero()` inside the `builder()` function seems to affect at least the`polkadot-sdk/substrate/frame/transaction-payment/src/lib.rs` function `weight_to_fee()`:
 ```rust
 	/// Compute the unadjusted portion of the weight fee by invoking the configured `WeightToFee`
 	/// impl. Note that the input `weight` is capped by the maximum block weight before computation.
