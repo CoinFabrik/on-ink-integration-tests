@@ -61,7 +61,7 @@ async fn end_to_end_weigth_to_fee_1(mut client: ink_e2e::Client<C, E>) -> E2ERes
 
 This behavior is seen in the local development node too, but not in testnets like Aleph Zero testnet. 
 
-Looking at the runtime in `polkadot-sdk`, we found a few implementations of the functions, but modifying them didn't changed the outcome of the tests as predicted. 
+Looking at the runtime in `polkadot-sdk`, we found a few implementations of the functions, but modifying them didn't change the outcome of the tests as predicted. 
 The functions that we modified to check if something changed were:
 
 1)  `polkadot-sdk/substrate/frame/contracts/src/exec.rs`, the `get_weight_price()` function. 
