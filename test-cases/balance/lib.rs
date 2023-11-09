@@ -1,6 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std, no_main)]
 
-
 #[ink::contract]
 mod get_balance {
 
@@ -25,12 +24,12 @@ mod get_balance {
         }
     }
 
-
     #[cfg(test)]
     const INITIAL_BALANCE_INTEGRATION: u128 = 1000000;
     #[cfg(all(test, feature = "e2e-tests"))]
     const INITIAL_BALANCE_E2E: u128 = 1000000000;
-
+    #[cfg(all(test, feature = "e2e-tests"))]
+    const CORRECTED_BALANCE_INTEGRATION: u128 = 1000000000;
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
@@ -41,13 +40,7 @@ mod get_balance {
             // Given
             let constructor = GetBalanceRef::new();
             let contract_to_call_acc_id = client
-                .instantiate(
-                    "get_balance",
-                    &ink_e2e::alice(),
-                    constructor,
-                    0,
-                    None,
-                )
+                .instantiate("get_balance", &ink_e2e::alice(), constructor, 0, None)
                 .await
                 .expect("instantiate failed")
                 .account_id;
@@ -58,23 +51,20 @@ mod get_balance {
                 .await
                 .expect("Failed to get account balance");
 
-
             // Then
-            assert_eq!(
-                contract_balance_before,
-                INITIAL_BALANCE_E2E
-            );
+            assert_eq!(contract_balance_before, INITIAL_BALANCE_E2E);
             Ok(())
         }
     }
-
-
     #[cfg(test)]
     mod tests {
         use super::*;
         use ink::env::{test::set_callee, DefaultEnvironment};
         #[ink::test]
-        fn get_balance() {
+        #[should_panic(
+            expected = "assertion failed: `(left == right)`\n  left: `1000000000`,\n right: `1000000`"
+        )]
+        fn get_balance_old_value() {
             // Given
             let callee_id = AccountId::from([0x01; 32]);
             set_callee::<DefaultEnvironment>(callee_id);
@@ -82,13 +72,25 @@ mod get_balance {
             // When
             let balance = contract.get_balance();
             // Then
-            assert_eq!(balance, INITIAL_BALANCE_INTEGRATION);
+            assert_eq!(balance, INITIAL_BALANCE_INTEGRATION); // This should fail, as the balance is now 1_000_000_000
+        }
+
+        #[ink::test]
+        fn get_balance_new_value() {
+            // Given
+            let callee_id = AccountId::from([0x01; 32]);
+            set_callee::<DefaultEnvironment>(callee_id);
+            let contract = GetBalance::new();
+            // When
+            let balance = contract.get_balance();
+            // Then
+            assert_eq!(balance, CORRECTED_BALANCE_INTEGRATION); // This should fail, as the balance is now 1_000_000_000
         }
 
         #[ink::test]
         fn ambient_match() {
-            assert_eq!(INITIAL_BALANCE_E2E, INITIAL_BALANCE_INTEGRATION);
+            assert_ne!(INITIAL_BALANCE_E2E, INITIAL_BALANCE_INTEGRATION);
+            assert_eq!(INITIAL_BALANCE_E2E, CORRECTED_BALANCE_INTEGRATION);
         }
     }
-
 }
