@@ -1,6 +1,6 @@
-# Report: `weight_to_fee()`
+# Different gas value for `weight_to_fee()` in ink! integration and e2e tests
 
-On our research into integration and end-to-end function implementation differences, we stumbled upon `weight_to_fee()` not working as expected.
+On our [research](https://github.com/CoinFabrik/on-ink-integration-tests) into integration and end-to-end function implementation differences, we stumbled upon `weight_to_fee()` not working as expected. Both Integration and E2E environments return a valid gas price (`u128`) for a given gas amount. However, the price per gas unit differs in both environments: it is 100 in integration tests and always 0 in E2E tests.
 
 Adding to the [test-case and documentation](https://github.com/CoinFabrik/on-ink-integration-tests/tree/main/test-cases/weight-to-fee) we built for analyzing this issue, we explain below the problem, we describe the work we have undertaken to try to identify its source, and propose next steps for resolving it.
 
@@ -133,8 +133,10 @@ Where the first one has a hardcoded zero. Is that intentional as "working as int
 
 ## Next Steps
 
-- Make the gas value in e2e the same as in integration tests
-- Make a setter like `env().setGasPrice(...)` to set the value in the tests (with a default value)
+We propose to make the following changes to `weight_to_fee()` in ink! e2e tests. Before doing that, we need assistance in identifying all the files relevant to its implementation. Particularly, to identify which code is responible for the function always returning 0.
+
+- Make the gas value in e2e the same as in integration tests.
+- Make a setter like `env().setGasPrice(...)` to set the value in the tests (with a default value).
 - Make the gas value an arbitrary X and document it.
 
 Any of this decisions should be properly documented. 
