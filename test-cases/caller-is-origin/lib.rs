@@ -48,7 +48,7 @@ mod invoke_contract {
     #[cfg(test)]
     mod tests {
         use super::*;
-        use contract_to_call::ContractToCall;
+        use caller_is_origin_contract_to_call::ContractToCall;
 
         // TODO: this test shouldn't panic when ink integration test is improved.
         #[ink::test]

@@ -1,5 +1,5 @@
 [package]
-name = "invoke-contract"
+name = "code-hash-other-contract"
 version = "0.1.0"
 edition = "2021"
 authors = ["[your_name] <[your_email]>"]
@@ -13,7 +13,6 @@ std = [
     "ink/std",
     "scale/std",
     "scale-info/std",
-    "invoke-contract-contract-to-call/std",
 ]
 ink-as-dependency = []
 e2e-tests = []
@@ -22,8 +21,6 @@ e2e-tests = []
 ink = { workspace = true }
 scale = { workspace = true, package = "parity-scale-codec" }
 scale-info = { workspace = true, optional = true }
-
-invoke-contract-contract-to-call = { path = "./contract-to-call", default-features = false, features = ["ink-as-dependency"] }
 
 [dev-dependencies]
 ink_e2e = { workspace = true }
