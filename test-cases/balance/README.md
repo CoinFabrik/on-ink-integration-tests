@@ -25,7 +25,15 @@ We found that the initial balance differs on both environments.
 | --- |-----------------------|:-----------:|:------------:|:--:|
 | 1   | `get_balance`         |   1000000   | 1000000000   | ❌  |
 
+Furthermore, the inital balance of default addresses also differed in both environments. 
+
+| \#  | Test                  | Integration |     E2E      | OK |
+| --- |-----------------------|:-----------:|:------------:|:--:|
+| 2   | `default_balances`         |   1000000   | 1<<60   | ❌  |
+
 ## Result
 
 We need to understand where the initial balance value is created/used in the _integration test environment_ and update 
-its value to the value in the _e2e environment_.
+its value to the value in the _e2e environment_. 
+
+We also need to modify the inital balance of default addresses in integration tests to equal e2e tests.
