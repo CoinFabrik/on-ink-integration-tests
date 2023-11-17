@@ -29,3 +29,7 @@ Test 1 worked as expected in End-to-End but did not on Integration since it's [n
 ## Result
 
 See estimate for code_hash().
+
+## Update on Correcting this Issue
+
+Our implementation in [PR #1988](https://github.com/paritytech/ink/pull/1988) returns the code hash of the account of the calling contract. It simply fetches the code hash stored in the database by `instantiate_contract()` or set by `set_code_hash()`.
