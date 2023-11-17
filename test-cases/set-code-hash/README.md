@@ -30,3 +30,7 @@ Test case worked in End-to-End but did not in Integration since it's [unimplemen
 
 The function appears to depend on features also required by gas_left() and instantiate_contract(); namely, storage and retrieval of secondary contracts, and gas calculations. Until those functions are implemented, it's unfeasible to estimate an implementation cost.
 On-chain implementation at frame/contracts/src/exec.rs:1489
+
+## Update on Correcting this Issue
+
+Our implementation in [PR #1988](https://github.com/paritytech/ink/pull/1988) overwrites the value set for code hash of an account in the database.
