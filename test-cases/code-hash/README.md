@@ -48,3 +48,7 @@ if code_hash(foo) == "0xf00..."{
 }
 ```
 Option #2 supports both use cases, but it's more complex to implement and also slows down integration tests by requiring the full WASM compilation of the contract.
+
+## Update on Correcting this Issue
+
+We implemented the function in [PR #1988](https://github.com/paritytech/ink/pull/1988) so that it returns a value that is unique for the contract, but it does not emulate what would be returned on-chain. This value is a hash of a pointer to a function generated for each contract by the compiler. Therefore, this value is unique for each contract, which is the intended purpose of this function.
