@@ -39,3 +39,10 @@ End-to-End:
 The function depends on features also required by gas_left(), instantiate_contract(); namely, storage and retrieval of secondary contracts, and gas calculations. The logic is fairly complex, so it's difficult to provide a time estimation. As a very rough estimate, it could be around 1-2 weeks worth of work.
 On-chain implementation at frame/contracts/src/exec.rs:1199-1243
 On-chain implementation at frame/contracts/src/exec.rs:885-1014
+
+
+## Update on Correcting this Issue
+
+Functions `invoke_contract()` and `invoke_contract_delegate()` have almost identical implementations in our proposed [PR #1988](https://github.com/paritytech/ink/pull/1988).
+
+After getting their arguments from the `CallParams` object they call a new internal function `invoke_contract_impl()` which handles the invocation logic. Of note is that the actual call into the generated dispatch function is done by `execute_contract_call()`. This function is only instantiated by rustc per-contract when a test calls `ink::env::test::upload_code()`. Function `upload_code()` adds a reference to `execute_contract_call()` to the environment’s database. Function `invoke_contract_impl()` fetches the reference and calls it. Before and after this call it takes care of execution context bookkeeping.
