@@ -33,4 +33,4 @@ On-chain implementation at frame/contracts/src/exec.rs:1489
 
 ## Update on Correcting this Issue
 
-Our implementation in [PR #1988](https://github.com/paritytech/ink/pull/1988) overwrites the value set for code hash of an account in the database.
+Our implementation in [PR #1988](https://github.com/paritytech/ink/pull/1988) overwrites the value set for the code hash of an account in the database.
