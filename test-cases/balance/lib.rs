@@ -30,6 +30,8 @@ mod get_balance {
     const INITIAL_BALANCE_E2E: u128 = 1000000000;
     #[cfg(all(test, feature = "e2e-tests"))]
     const CORRECTED_BALANCE_INTEGRATION: u128 = 1000000000;
+    #[cfg(all(test, feature = "e2e-tests"))]
+    const TWO_TO_THE_SIXTY: u128 = 1 << 60;
 
     #[cfg(all(test, feature = "e2e-tests"))]
     mod e2e_tests {
@@ -52,7 +54,7 @@ mod get_balance {
                 .expect("Failed to get account balance");
 
             // Then
-            assert_eq!(contract_balance_before, INITIAL_BALANCE_E2E);
+            assert_eq!(contract_balance_before, CORRECTED_BALANCE_INTEGRATION);
             Ok(())
         }
 
@@ -90,16 +92,6 @@ mod get_balance {
                 .await
                 .expect("Failed to get account balance");
 
-            let one_balance_before = client
-                .balance(ink_e2e::account_id(ink_e2e::AccountKeyring::One))
-                .await
-                .expect("Failed to get account balance");
-
-            let two_balance_before = client
-                .balance(ink_e2e::account_id(ink_e2e::AccountKeyring::Two))
-                .await
-                .expect("Failed to get account balance");
-
             let arr = [
                 alice_balance_before,
                 bob_balance_before,
@@ -107,11 +99,9 @@ mod get_balance {
                 dave_balance_before,
                 eve_balance_before,
                 ferdie_balance_before,
-                one_balance_before,
-                two_balance_before,
             ];
 
-            assert_eq!(arr, [CORRECTED_BALANCE_INTEGRATION; 8]);
+            assert_eq!(arr, [TWO_TO_THE_SIXTY; 6]);
 
             Ok(())
         }
@@ -130,12 +120,56 @@ mod get_balance {
             // When
             let balance = contract.get_balance();
             // Then
-            assert_eq!(balance, INITIAL_BALANCE_INTEGRATION);
+            assert_eq!(balance, TWO_TO_THE_SIXTY);
         }
 
         #[ink::test]
-        fn ambient_match() {
-            assert_eq!(INITIAL_BALANCE_E2E, INITIAL_BALANCE_INTEGRATION);
+        fn balance_from_default_accounts() {
+            //get the balance from alice, bob and all the default accounts
+
+            let alice_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().alice,
+            ).unwrap();
+
+            let bob_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().bob,
+            ).unwrap();
+
+            let charlie_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().charlie,
+            ).unwrap();
+
+            let dave_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().django,
+            ).unwrap();
+
+            let eve_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().eve,
+            ).unwrap();
+
+            let ferdie_balance_before = ink::env::test::get_account_balance::<ink::env::DefaultEnvironment>(
+                ink::env::test::default_accounts::<ink::env::DefaultEnvironment>().frank,
+            ).unwrap();
+
+            let arr = [
+                alice_balance_before,
+                bob_balance_before,
+                charlie_balance_before,
+                dave_balance_before,
+                eve_balance_before,
+                ferdie_balance_before,
+            ];
+
+            assert_eq!(arr, [TWO_TO_THE_SIXTY; 6]);
+
+        }
+        #[ink::test]
+        fn ambient_didnt_match() {
+            assert_ne!(INITIAL_BALANCE_E2E, INITIAL_BALANCE_INTEGRATION);
+        }
+        #[ink::test]
+        fn ambient_match_now() {
+            assert_eq!(INITIAL_BALANCE_E2E, CORRECTED_BALANCE_INTEGRATION);
         }
     }
 }
