@@ -45,7 +45,7 @@ This is relatively trivial. It can be implemented in a single day. For backwards
 
 ## Update on Correcting this Issue
 
-Now the integration tests mimic the account setup in e2e tests. We changed the name of the accounts "Django" to "Dave" and "Frank" to "Ferdie". On the other hand, there were two accounts in e2e that did not exist in integration tests, accounts “one” and “two”. We added these accounts to integration tests.
+Now, with our proposed implementation in [PR #1955](https://github.com/paritytech/ink/pull/1955), the integration tests mimic the account setup in e2e tests. We changed the name of the accounts "Django" to "Dave" and "Frank" to "Ferdie". On the other hand, there were two accounts in e2e that did not exist in integration tests, accounts “one” and “two”. We added these accounts to integration tests.
 
 
 Moreover, since e2e tests were drawing these accounts from the library `sp_keyring::sr25519::Keyring`, we made integration tests depend on the same library in order to account for future changes in this lib.
