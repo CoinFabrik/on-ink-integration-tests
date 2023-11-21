@@ -42,3 +42,9 @@ We reviewed that the function `weight_to_fee()` has multiple implementations. It
 
 This incorrect behaviour of `weight_to_fee()` in E2E tests, is also observed in [`paritytech/substrate-contracts-node`](https://github.com/paritytech/substrate-contracts-node).
 
+## Update on Correcting this Issue
+
+In order to solve this issue, we contacted the ink! development team and provided a report on this finding, raised as issue [#1985](https://github.com/paritytech/ink/issues/1985) in the requested repository. This was discussed with [@cmichi](https://github.com/cmichi) and, after being reviewed by [@smiasojed](@smiasojed), was finally resolved in [PR #219](https://github.com/paritytech/substrate-contracts-node/pull/219) to substrate-contracts-node.
+
+
+
