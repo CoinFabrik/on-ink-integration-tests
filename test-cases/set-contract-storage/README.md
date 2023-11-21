@@ -35,4 +35,4 @@ This feature is practically complete, it's just missing a size check. Implementi
 
 The function `set_contract_storage()` sets the storage in a contract. There was a missing validation in integration tests that was present in e2e. This validation checked that the `size` of the storage set did not exceed 16380 bytes.
 
-We added a validation to the function `set_contract_storage()` in integration tests that checks the size of the input value against the same limit set in e2e test: 16380 bytes. In case this limit is exceeded, a panic is raised with the message: "Value too large to be stored in contract storage, maximum size is {} bytes".
+In our proposed implementation in [PR #1961](https://github.com/paritytech/ink/pull/1961), we added a validation to the function `set_contract_storage()` in integration tests that checks the size of the input value against the same limit set in e2e test: 16380 bytes. In case this limit is exceeded, a panic is raised with the message: "Value too large to be stored in contract storage, maximum size is {} bytes".
