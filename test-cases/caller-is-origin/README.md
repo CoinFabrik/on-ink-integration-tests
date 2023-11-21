@@ -34,3 +34,11 @@ In this scenario, Test 1 fails because the `caller_is_origin` implementation pan
 
 The function depends on features also required by [`gas_left`](https://paritytech.github.io/ink/ink_env/fn.gas_left.html) and [`invoke_contract`](https://paritytech.github.io/ink/ink_env/fn.invoke_contract.html); namely, storage and retrieval of secondary contracts, and gas calculations. Assuming that those features are already in place, the function is fairly trivial. It should not take more than a few minutes to implement.
 On-chain implementation at `frame/contracts/src/exec.rs:1385`.
+
+## Update on Correcting this Issue
+
+In our proposed implementation in [PR #1991](https://github.com/paritytech/ink/pull/1991), we have added the `depth` field to the `ExecContext` struct to detect caller changes whenever calls are made between contracts.
+
+Basically every time the callee changes in the `instantiate_contract()` or `invoke_contract()` function calls, 1 is added to `depth`. And when the callee returns to the previous one, 1 is subtracted.
+
+The `caller_is_origin()` function compares the value of depth to zero to check if the current contract caller is the origin of the entire call stack.
